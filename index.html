@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WONTAKE — сеть серверов CS2</title>
+<link id="fav" rel="icon" type="image/png" href="">
+<meta name="description" content="WONTAKE — сеть серверов Counter-Strike 2: PUBLIC, AWP, JAIL, MANIAC, FUN. Живой онлайн, карты, привилегии и мгновенное подключение через Steam.">
+<meta name="theme-color" content="#04060c">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="WONTAKE">
+<meta property="og:title" content="WONTAKE — сеть серверов CS2">
+<meta property="og:description" content="49 серверов, 22 карты, подключение в один клик через Steam.">
+<meta property="og:image" content="img/de_mirage.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060c; --panel:rgba(9,13,23,.74); --panel2:rgba(14,20,35,.88); --line:rgba(140,160,220,.14); --line2:rgba(140,160,220,.3);
+  --text:#f2f6ff; --muted:#93a0c2; --dim:#5c6788;
+  --accent:#00a2ff; --accent2:#0070d1; --ring:#eaf4ff;
+  --green:#3ce081; --amber:#ffb020; --red:#ff4d6d; --mag:#ff4dd8; --cyan:#38d9ff; --violet:#8b5cf6; --sand:#d8b26a;
+  --tint:#00a2ff; --cardH:154px;
+  --fd:'Unbounded',system-ui,sans-serif; --fb:'Manrope',system-ui,sans-serif; --fm:'JetBrains Mono',monospace;
+  --top:66px; --hint:54px;
+}
+body[data-accent="violet"]{--accent:#8b5cf6;--accent2:#6d28d9;--ring:#f1eaff}
+body[data-accent="green"]{--accent:#34d399;--accent2:#059669;--ring:#eafff5}
+body[data-accent="amber"]{--accent:#ffb020;--accent2:#d97706;--ring:#fff6e6}
+body[data-density="compact"]{--cardH:120px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);overflow:hidden;-webkit-font-smoothing:antialiased}
+svg{display:block;flex-shrink:0}
+[data-ic]{display:inline-flex;align-items:center;justify-content:center;line-height:0}
+::selection{background:var(--accent);color:#04121c}
+button{font-family:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+input,select{font-family:inherit}
+:focus{outline:none}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:rgba(6,9,17,.6)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 70%,#1a2338),#1a2338);border-radius:8px;border:2px solid rgba(6,9,17,.6)}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+*{scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--accent) 55%,#1a2338) rgba(6,9,17,.6)}
+
+#boot{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;animation:bootOut .7s ease 1.7s forwards}
+#boot .b-mark{width:86px;height:86px;display:grid;place-items:center;animation:bootFloat 1.6s ease infinite alternate}
+#boot .b-mark img,#boot .b-mark svg{width:76px;height:76px;filter:drop-shadow(0 0 36px color-mix(in srgb,var(--accent) 65%,transparent))}
+#boot .b-word{font-family:var(--fd);font-weight:900;font-size:34px;letter-spacing:10px;animation:bootWord 1.6s cubic-bezier(.2,.7,.2,1) forwards}
+#boot .b-word em{font-style:normal;color:var(--accent)}
+#boot .b-sub{font-family:var(--fm);font-size:10px;letter-spacing:4px;color:var(--dim);text-transform:uppercase}
+#boot .b-dots{display:flex;gap:7px}
+#boot .b-dots i{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:bd 1s infinite}
+#boot .b-dots i:nth-child(2){animation-delay:.15s}#boot .b-dots i:nth-child(3){animation-delay:.3s}
+@keyframes bd{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes bootFloat{from{transform:translateY(4px)}to{transform:translateY(-6px)}}
+@keyframes bootWord{from{letter-spacing:22px;opacity:0}to{letter-spacing:10px;opacity:1}}
+@keyframes bootOut{to{opacity:0;visibility:hidden;pointer-events:none}}
+
+#ambient{position:fixed;inset:0;z-index:0;background:var(--bg)}
+.amb{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease,filter .6s ease;transform:scale(1.05)}
+.amb.show{opacity:1;animation:ken 28s ease-in-out infinite alternate}
+@keyframes ken{from{transform:scale(1.05)}to{transform:scale(1.15) translate(1.5%,-1%)}}
+body.sub .amb{filter:blur(20px) brightness(.46) saturate(.9)}
+#ambient .tint{position:absolute;inset:0;background:
+  radial-gradient(90% 80% at 78% 14%, color-mix(in srgb,var(--tint) 28%,transparent), transparent 62%),
+  radial-gradient(70% 60% at 12% 92%, color-mix(in srgb,var(--mag) 12%,transparent), transparent 60%),
+  linear-gradient(90deg, rgba(4,6,12,.94) 0%, rgba(4,6,12,.7) 34%, rgba(4,6,12,.26) 68%, rgba(4,6,12,.55) 100%),
+  linear-gradient(0deg, rgba(4,6,12,.96) 0%, transparent 42%)}
+#ambient .subscrim{position:absolute;inset:0;background:rgba(4,6,12,.6);opacity:0;transition:opacity .5s}
+body.sub #ambient .subscrim{opacity:1}
+#ambient .grain{position:absolute;inset:0;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+#dust{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.55}
+
+#app{position:relative;z-index:2;height:100vh;height:100dvh;display:flex;flex-direction:column}
+.topbar{height:var(--top);flex-shrink:0;display:flex;align-items:center;gap:16px;padding:0 clamp(14px,2.4vw,34px);
+  background:linear-gradient(180deg,rgba(4,6,12,.88),rgba(4,6,12,.55) 82%,transparent);backdrop-filter:blur(16px);position:relative;z-index:6}
+.topbar::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--accent) 45%,transparent) 30%,color-mix(in srgb,var(--cyan) 35%,transparent) 70%,transparent);opacity:.5}
+.brand{display:flex;align-items:center;gap:11px;cursor:pointer;flex-shrink:0}
+.brand .mark{width:34px;height:34px;display:grid;place-items:center}
+.brand .mark img,.brand .mark svg{width:32px;height:32px;filter:drop-shadow(0 0 12px color-mix(in srgb,var(--accent) 60%,transparent))}
+.brand b{font-family:var(--fd);font-weight:900;font-size:17px;letter-spacing:2px}
+.brand b em{font-style:normal;color:var(--accent)}
+.brand small{font-family:var(--fm);font-size:8.5px;letter-spacing:2px;color:var(--dim);border:1px solid var(--line2);padding:2px 6px;border-radius:5px}
+.tabsnav{display:flex;gap:4px;margin:0 auto;overflow-x:auto;max-width:52vw;padding:4px}
+.tabsnav::-webkit-scrollbar{height:0}
+.tnav{display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:24px;color:var(--muted);font-size:13px;font-weight:700;white-space:nowrap;transition:.25s}
+.tnav svg{width:15px;height:15px}
+.tnav:hover{color:#fff;background:rgba(255,255,255,.06)}
+.tnav.on{color:#fff;background:color-mix(in srgb,var(--accent) 22%,rgba(255,255,255,.05));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 55%,transparent)}
+.tnav.on svg{color:var(--accent)}
+.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0;margin-left:auto}
+.online-chip{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:11.5px;font-weight:700;color:var(--green);height:40px;padding:0 15px;border-radius:22px;border:1px solid var(--line);background:rgba(6,10,18,.55);transition:.2s}
+.online-chip:hover{border-color:color-mix(in srgb,var(--green) 50%,transparent);box-shadow:0 0 16px color-mix(in srgb,var(--green) 22%,transparent)}
+.online-chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.55);opacity:.5}}
+.clockbox{text-align:right;line-height:1.15;padding:0 4px}
+.clockbox b{font-family:var(--fd);font-size:16px;font-weight:700;display:block;letter-spacing:.5px}
+.clockbox span{font-size:10px;color:var(--dim);font-weight:600}
+.tb-ic{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line);background:rgba(6,10,18,.55);transition:.2s;padding:0}
+.tb-ic:hover{color:#fff;border-color:var(--accent);box-shadow:0 0 16px color-mix(in srgb,var(--accent) 35%,transparent);transform:translateY(-1px)}
+.tb-ic svg{width:18px;height:18px}
+.tb-ic.muted{color:var(--dim)}
+.tb-ic.muted:hover{color:var(--red);border-color:var(--red);box-shadow:0 0 16px color-mix(in srgb,var(--red) 30%,transparent)}
+.avatarbtn{position:relative;width:40px;height:40px;border-radius:50%;overflow:hidden;border:1px solid var(--line2);display:grid;place-items:center;padding:0;
+  background:radial-gradient(circle at 50% 32%,#1c2740,#0a0f1c);color:#fff;transition:.2s}
+.avatarbtn:hover{transform:scale(1.07);border-color:#fff}
+.avatarbtn.authed{border-color:var(--accent);box-shadow:0 0 16px color-mix(in srgb,var(--accent) 45%,transparent)}
+.avatarbtn .av-in{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:13px;color:#04121c;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.avatarbtn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.avatarbtn svg{width:19px;height:19px;position:relative}
+.avatarbtn .av-dot{position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid #04060c;box-shadow:0 0 8px var(--green);z-index:2}
+
+main{flex:1;min-height:0;position:relative}
+.screen{position:absolute;inset:0;display:none;overflow-y:auto;overflow-x:hidden;padding:12px clamp(14px,2.6vw,40px) 28px}
+.screen.on{display:block;animation:scrIn .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes scrIn{from{opacity:0;transform:scale(.985) translateY(10px)}to{opacity:1;transform:none}}
+.focused{outline:2px solid color-mix(in srgb,var(--ring) 92%,transparent);outline-offset:2px;
+  box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 20%,transparent),0 12px 36px rgba(0,0,0,.5);z-index:3}
+
+#scr-home{display:none;flex-direction:column;gap:8px}
+#scr-home.on{display:flex}
+.tilesrow{display:flex;gap:16px;padding:14px 6px 22px;overflow-x:auto;flex-shrink:0;scroll-padding:20px}
+.tilesrow::-webkit-scrollbar{height:5px}
+.tile{width:142px;height:142px;flex-shrink:0;border-radius:18px;overflow:hidden;position:relative;cursor:pointer;background:var(--panel2);
+  transition:transform .3s cubic-bezier(.2,.7,.2,1),box-shadow .3s;animation:tileIn .55s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes tileIn{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:none}}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.92;transition:.4s}
+.tile .t-grad{position:absolute;inset:0;background:linear-gradient(185deg,transparent 42%,rgba(3,5,10,.92))}
+.tile .t-sheen{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(105deg,transparent 44%,rgba(255,255,255,.16) 50%,transparent 56%);transform:translateX(-130%);transition:transform .7s}
+.tile:hover .t-sheen{transform:translateX(130%)}
+.tile .t-name{position:absolute;left:12px;bottom:10px;font-family:var(--fd);font-weight:800;font-size:14px;text-transform:lowercase;z-index:2;text-shadow:0 2px 10px rgba(0,0,0,.8)}
+.tile .t-on{position:absolute;top:9px;left:10px;z-index:2;display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:10px;font-weight:700;color:var(--green);background:rgba(3,5,10,.62);padding:3px 7px;border-radius:12px;backdrop-filter:blur(4px)}
+.tile .t-on i{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green)}
+.tile .t-fallback{position:absolute;inset:0;display:grid;place-items:center;color:var(--tc,var(--accent));opacity:.5}
+.tile .t-fallback svg{width:56px;height:56px}
+.tile.util .t-fallback{opacity:.9}
+.tile.util .t-fallback svg{width:52px;height:52px;filter:drop-shadow(0 6px 18px color-mix(in srgb,var(--tc,var(--accent)) 55%,transparent))}
+.tile.util .t-grad{background:linear-gradient(185deg,transparent 35%,rgba(3,5,10,.85))}
+.tile.focused{transform:scale(1.12);outline-offset:3px}
+.tile.focused img{opacity:1}
+.tile:hover{transform:scale(1.06)}
+.tile.focused:hover{transform:scale(1.12)}
+.tile.util{background:linear-gradient(150deg,color-mix(in srgb,var(--tc,var(--accent)) 32%,#0a0f1c),#070b14)}
+.focuspanel{flex:1;min-height:236px;display:flex;flex-direction:column;justify-content:flex-end;padding:0 8px 12px}
+.fp-tag{display:inline-flex;align-items:center;gap:9px;font-family:var(--fm);font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:var(--tint);margin-bottom:12px}
+.fp-tag::before{content:'';width:26px;height:2px;background:var(--tint);box-shadow:0 0 10px var(--tint)}
+.fp-title{font-family:var(--fd);font-weight:900;font-size:clamp(38px,5.6vw,74px);line-height:1;letter-spacing:-1px;text-transform:lowercase;text-shadow:0 8px 40px rgba(0,0,0,.75);animation:fpIn .5s cubic-bezier(.2,.7,.2,1)}
+.fp-desc{margin-top:12px;color:var(--muted);font-size:14.5px;max-width:620px;line-height:1.55;text-shadow:0 2px 12px rgba(0,0,0,.85)}
+.fp-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.fp-chip{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;padding:8px 13px;border-radius:12px;border:1px solid var(--line2);background:rgba(6,10,18,.55);backdrop-filter:blur(8px)}
+.fp-chip svg{width:13px;height:13px;color:var(--tint)}
+.fp-chip b{font-family:var(--fm)}
+.fp-btns{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+@keyframes fpIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.btn-play-big{display:flex;align-items:center;gap:12px;padding:15px 34px;border-radius:16px;font-family:var(--fd);font-weight:800;font-size:15px;color:#04121c;
+  background:linear-gradient(120deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#fff));box-shadow:0 10px 34px color-mix(in srgb,var(--accent) 50%,transparent);transition:.25s}
+.btn-play-big svg{width:17px;height:17px}
+.btn-play-big:hover{transform:translateY(-2px) scale(1.02);filter:brightness(1.1)}
+.btn-glass{display:flex;align-items:center;gap:10px;padding:15px 24px;border-radius:16px;font-weight:800;font-size:13.5px;color:#fff;border:1px solid var(--line2);background:rgba(10,16,28,.55);backdrop-filter:blur(10px);transition:.25s}
+.btn-glass svg{width:15px;height:15px}
+.btn-glass:hover{border-color:var(--accent);background:rgba(10,16,28,.8)}
+.actrow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;flex-shrink:0;padding:6px 6px 4px}
+.act{border-radius:16px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);padding:16px;cursor:pointer;transition:.25s;position:relative;overflow:hidden;min-height:130px;display:flex;flex-direction:column}
+.act:hover{transform:translateY(-3px);border-color:var(--line2)}
+.act .a-label{font-family:var(--fm);font-size:9.5px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:7px}
+.act .a-label svg{width:12px;height:12px;color:var(--accent)}
+.act .a-big{font-family:var(--fd);font-weight:800;font-size:27px;margin-top:8px}
+.act .a-sub{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:auto}
+.netbars{display:flex;align-items:flex-end;gap:6px;height:44px;margin-top:10px}
+.netbars i{flex:1;border-radius:4px 4px 2px 2px;background:linear-gradient(180deg,var(--bc,var(--accent)),color-mix(in srgb,var(--bc,var(--accent)) 30%,transparent));transition:height .8s cubic-bezier(.2,.7,.2,1);min-height:4px}
+.act.continue .a-art{position:absolute;inset:0;opacity:.36;background-size:cover;background-position:center}
+.act.continue .a-in{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
+.act.continue b{font-size:14px;margin-top:8px;display:block}
+.act.continue small{font-family:var(--fm);font-size:10px;color:var(--muted)}
+.act.continue .a-play{margin-top:auto;align-self:flex-start;display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;color:var(--accent)}
+.act.continue .a-play svg{width:13px;height:13px}
+.act.promo{padding:0}
+.act.promo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.act.promo .p-fallback{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:16px;background:linear-gradient(130deg,color-mix(in srgb,var(--violet) 30%,#0a0f1c),#070b14)}
+.act.promo .p-fallback svg{width:26px;height:26px;color:var(--amber);margin-bottom:8px}
+.act.promo .p-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,6,12,.9),transparent 65%)}
+.act.promo .p-body{position:absolute;left:15px;right:15px;bottom:13px;z-index:1}
+.act.promo .p-body b{font-family:var(--fd);font-size:15px;display:block}
+.act.promo .p-body span{font-size:11px;color:var(--muted);font-weight:600}
+.act.promo .p-tag{position:absolute;top:10px;right:10px;font-size:8.5px;font-weight:800;letter-spacing:1px;background:rgba(3,5,10,.72);color:var(--amber);padding:3px 8px;border-radius:10px;z-index:1}
+.act.favs .a-star{position:absolute;right:14px;top:14px;color:var(--amber);opacity:.85}
+.act.favs .a-star svg{width:20px;height:20px;fill:var(--amber)}
+.act.favs b{font-size:13px;margin-top:8px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.scr-head{display:flex;align-items:center;gap:16px;margin:6px 0 16px;flex-wrap:wrap}
+.backbtn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line2);background:rgba(8,12,22,.6);display:grid;place-items:center;color:var(--muted);transition:.2s;flex-shrink:0;padding:0}
+.backbtn:hover{color:#fff;border-color:var(--accent)}
+.backbtn svg{width:18px;height:18px}
+.scr-head h2{font-family:var(--fd);font-weight:900;font-size:clamp(22px,3vw,34px);text-transform:lowercase;letter-spacing:-.5px;display:flex;align-items:center;gap:13px}
+.scr-head h2 .h-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--mc,var(--accent)) 16%,rgba(10,16,28,.7));color:var(--mc,var(--accent));border:1px solid color-mix(in srgb,var(--mc,var(--accent)) 40%,transparent)}
+.scr-head h2 .h-ic svg{width:18px;height:18px}
+.scr-head .sh-sub{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:3px}
+.scr-head .sh-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+.modehero{position:relative;height:118px;border-radius:18px;overflow:hidden;border:1px solid color-mix(in srgb,var(--mc) 34%,var(--line));margin-bottom:16px;background:#0a0f1c}
+.modehero .mh-bg{position:absolute;inset:0;background-size:cover;background-position:center 42%;opacity:.6}
+.modehero .mh-shade{position:absolute;inset:0;background:linear-gradient(100deg,rgba(4,6,12,.94) 6%,rgba(4,6,12,.6) 46%,rgba(4,6,12,.35)),linear-gradient(0deg,rgba(4,6,12,.7),transparent 70%)}
+.modehero .mh-in{position:relative;z-index:1;height:100%;display:flex;align-items:center;gap:16px;padding:0 20px;flex-wrap:wrap}
+.modehero .mh-ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;color:var(--mc);background:color-mix(in srgb,var(--mc) 16%,rgba(6,10,18,.7));border:1px solid color-mix(in srgb,var(--mc) 45%,transparent);flex-shrink:0}
+.modehero .mh-ic svg{width:22px;height:22px}
+.modehero .mh-txt{min-width:0;flex:1}
+.modehero .mh-txt b{font-family:var(--fd);font-weight:900;font-size:22px;text-transform:lowercase;display:block;text-shadow:0 3px 14px rgba(0,0,0,.9)}
+.modehero .mh-txt p{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:4px;text-shadow:0 2px 10px rgba(0,0,0,.9)}
+.modehero .mh-stats{display:flex;gap:8px;flex-wrap:wrap}
+.modehero .mh-chip{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:700;padding:7px 12px;border-radius:11px;border:1px solid var(--line2);background:rgba(4,7,13,.6);backdrop-filter:blur(6px)}
+.modehero .mh-chip svg{width:12px;height:12px;color:var(--mc)}
+.modehero .mh-chip b{font-family:var(--fm)}
+
+.freshstrip{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.freshstrip .fs-label{display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:9.5px;letter-spacing:2px;color:var(--sand);text-transform:uppercase}
+.freshstrip .fs-label svg{width:13px;height:13px}
+.fs-chip{display:flex;align-items:center;gap:8px;padding:7px 13px 7px 8px;border-radius:12px;border:1px solid color-mix(in srgb,var(--sand) 40%,transparent);background:color-mix(in srgb,var(--sand) 9%,rgba(6,10,18,.6));color:var(--text);font-family:var(--fm);font-size:11px;font-weight:700;transition:.2s}
+.fs-chip:hover{border-color:var(--sand);box-shadow:0 0 18px color-mix(in srgb,var(--sand) 25%,transparent);transform:translateY(-1px)}
+.fs-chip .fs-th{width:30px;height:20px;border-radius:6px;background-size:cover;background-position:center;border:1px solid var(--line2);flex-shrink:0}
+.fs-chip .fs-n{font-size:8.5px;font-weight:800;letter-spacing:1px;color:#1a1200;background:var(--sand);padding:2px 6px;border-radius:6px;font-family:var(--fb)}
+
+.svtabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:14px}
+.svtab{display:flex;align-items:center;gap:8px;padding:10px 17px;border-radius:22px;border:1px solid var(--line);background:rgba(8,12,22,.55);color:var(--muted);font-family:var(--fd);font-weight:700;font-size:12.5px;text-transform:lowercase;white-space:nowrap;transition:.2s}
+.svtab svg{width:14px;height:14px}
+.svtab .cnt{font-family:var(--fm);font-size:10.5px;color:var(--green)}
+.svtab:hover{color:#fff}
+.svtab.on{color:#fff;border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,rgba(8,12,22,.6));box-shadow:0 0 18px color-mix(in srgb,var(--accent) 25%,transparent)}
+.ctrlbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:12px;padding:10px;border-radius:16px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(12px)}
+.csearch{flex:1;min-width:180px;display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:rgba(4,7,13,.6)}
+.csearch:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 15%,transparent)}
+.csearch svg{width:14px;height:14px;color:var(--dim)}
+.csearch input{flex:1;background:none;border:none;color:var(--text);font-size:13px;font-weight:600;outline:none;min-width:0}
+.csearch input::placeholder{color:var(--dim)}
+.csel{height:42px;padding:0 12px;border-radius:12px;border:1px solid var(--line);background:rgba(4,7,13,.6);color:var(--muted);font-weight:700;font-size:12px;cursor:pointer;outline:none}
+.csel option{background:#0a0f1c}
+.cchip{display:flex;align-items:center;gap:7px;height:42px;padding:0 14px;border-radius:12px;border:1px solid var(--line);background:rgba(4,7,13,.6);color:var(--muted);font-weight:700;font-size:12px;transition:.2s;white-space:nowrap}
+.cchip svg{width:13px;height:13px}
+.cchip:hover{color:#fff}
+.cchip.on{color:var(--green);border-color:color-mix(in srgb,var(--green) 55%,transparent);background:color-mix(in srgb,var(--green) 10%,transparent)}
+.cchip.on.fav{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 55%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+.cchip.on.neutral{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.cchip.on.sand{color:var(--sand);border-color:color-mix(in srgb,var(--sand) 55%,transparent);background:color-mix(in srgb,var(--sand) 10%,transparent)}
+.livebadge{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--fm);font-size:10px;letter-spacing:1.5px;color:var(--green);padding:0 6px}
+.livebadge i{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite}
+.drag-hint{display:none;align-items:center;gap:8px;font-size:11px;color:var(--dim);font-weight:600;margin:0 2px 14px}
+.drag-hint svg{width:13px;height:13px;color:var(--amber)}
+body.favview .drag-hint{display:flex}
+
+.mapgroup{margin-bottom:28px;opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
+.mapgroup.in{opacity:1;transform:none}
+.mg-head{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:13px;margin-bottom:13px;padding:10px 2px;
+  background:linear-gradient(180deg,rgba(4,6,12,.94),rgba(4,6,12,.68) 78%,transparent);backdrop-filter:blur(8px)}
+.mg-thumb{width:58px;height:38px;border-radius:9px;background-size:cover;background-position:center;border:1px solid var(--line2);flex-shrink:0;box-shadow:0 6px 18px rgba(0,0,0,.5);cursor:pointer;transition:.25s}
+.mg-thumb:hover{transform:scale(1.06);border-color:var(--accent)}
+.mg-name{font-family:var(--fm);font-weight:700;font-size:12px;letter-spacing:2.2px;text-transform:uppercase;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mg-new{font-family:var(--fb);font-size:8.5px;font-weight:800;letter-spacing:1px;color:#1a1200;background:var(--sand);padding:2px 7px;border-radius:6px}
+.mg-sub{font-size:11px;color:var(--dim);font-weight:600;margin-top:3px}
+.mg-line{flex:1;height:1px;background:linear-gradient(90deg,var(--line2),transparent);min-width:20px}
+.mg-share{width:110px;height:4px;border-radius:4px;background:rgba(140,160,220,.14);overflow:hidden;flex-shrink:0}
+.mg-share i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:4px;transition:width .8s}
+
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+body[data-cols="1"] .sgrid{grid-template-columns:1fr}
+body[data-cols="2"] .sgrid{grid-template-columns:repeat(2,1fr)}
+body[data-cols="3"] .sgrid{grid-template-columns:repeat(3,1fr)}
+.srv{height:var(--cardH);border-radius:16px;position:relative;overflow:hidden;border:1px solid var(--line);background:#0d1120;cursor:pointer;
+  transition:transform .28s cubic-bezier(.2,.7,.2,1),border-color .28s,box-shadow .28s;animation:cardIn .45s cubic-bezier(.2,.7,.2,1) backwards}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.srv:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--mc,var(--accent)) 55%,transparent);box-shadow:0 20px 48px -16px color-mix(in srgb,var(--mc,var(--accent)) 42%,transparent)}
+.srv::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;z-index:3;background:linear-gradient(90deg,transparent,var(--mc,var(--accent)),transparent);opacity:0;transition:opacity .3s}
+.srv:hover::before,.srv.focused::before{opacity:.9}
+.srv::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.13) 50%,transparent 58%);transform:translateX(-130%);transition:transform .7s ease}
+.srv:hover::after{transform:translateX(130%)}
+.srv.dragging{opacity:.35}
+.srv.drop-over{outline:2px dashed var(--accent);outline-offset:3px}
+.srv .s-bg{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .6s cubic-bezier(.2,.7,.2,1),background-image .4s;filter:saturate(1.08) contrast(1.04)}
+.srv:hover .s-bg,.srv.focused .s-bg{transform:scale(1.06)}
+.srv .s-shade{position:absolute;inset:0;background:
+  linear-gradient(100deg,rgba(4,6,12,.7) 0%,rgba(4,6,12,.16) 48%,rgba(4,6,12,.4) 100%),
+  linear-gradient(0deg,rgba(4,6,12,.86) 0%,transparent 60%)}
+.srv .s-top{position:absolute;top:13px;left:16px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;z-index:2}
+.srv .s-name{font-family:var(--fd);font-weight:800;font-size:14px;letter-spacing:.2px;text-shadow:0 2px 12px rgba(0,0,0,.95);display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.srv .s-name span.nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srv .s-new{font-family:var(--fb);font-size:8.5px;font-weight:800;letter-spacing:1px;color:#1a1200;background:var(--sand);padding:3px 7px;border-radius:7px;flex-shrink:0;box-shadow:0 0 14px color-mix(in srgb,var(--sand) 55%,transparent)}
+.srv .s-mode{font-size:8.5px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--mc);border:1px solid color-mix(in srgb,var(--mc) 55%,transparent);background:rgba(3,5,10,.6);padding:3px 7px;border-radius:8px;backdrop-filter:blur(4px);flex-shrink:0}
+.srv .s-topright{display:flex;align-items:center;gap:7px;flex-shrink:0;min-width:0}
+.srv .s-map{font-family:var(--fm);font-size:11px;color:#e4ebfa;text-shadow:0 2px 8px rgba(0,0,0,.95);white-space:nowrap;max-width:132px;overflow:hidden;text-overflow:ellipsis}
+body.hide-map .srv .s-map{display:none}
+.sact{width:30px;height:30px;border-radius:9px;border:1px solid rgba(255,255,255,.16);background:rgba(3,5,10,.55);color:#cfd6ea;display:grid;place-items:center;transition:.2s;backdrop-filter:blur(5px);flex-shrink:0;padding:0}
+.sact svg{width:14px;height:14px}
+.sact:hover{color:#fff;border-color:#fff;transform:translateY(-1px)}
+.sact.faved{color:var(--amber);border-color:var(--amber)}
+.sact.faved svg{fill:var(--amber)}
+.sact.ok{color:var(--green);border-color:var(--green)}
+.srv .s-bot{position:absolute;bottom:12px;left:16px;right:12px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;z-index:2}
+.srv .s-loc{display:flex;align-items:center;gap:7px;font-size:11.5px;color:#dbe2f2;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.95);min-width:0}
+.srv .s-loc .flag{width:16px;height:11px;border-radius:2.5px;overflow:hidden;flex-shrink:0;box-shadow:0 0 0 1px rgba(255,255,255,.14)}
+.srv .s-loc .ping{display:flex;align-items:center;gap:4px;font-family:var(--fm);font-size:10px;margin-left:2px}
+.srv .s-loc .ping svg{width:11px;height:11px}
+.srv .s-loc .ping.good{color:var(--green)}.srv .s-loc .ping.mid{color:var(--amber)}.srv .s-loc .ping.bad{color:var(--red)}
+body.hide-ping .srv .ping{display:none}
+.srv .s-right{display:flex;align-items:center;gap:11px;flex-shrink:0}
+.srv .s-pl{display:flex;align-items:center;gap:6px;font-family:var(--fd);font-weight:800;font-size:15px;text-shadow:0 2px 10px rgba(0,0,0,.95)}
+.srv .s-pl .pdot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.srv .s-pl .pdot.zero{background:var(--dim);box-shadow:none}
+.srv .s-pl .pdot.full{background:var(--red);box-shadow:0 0 8px var(--red)}
+.srv .s-pl .cur{color:var(--green)}
+.srv .s-pl .cur.zero{color:var(--dim)}
+.srv .s-pl .cur.full{color:var(--red)}
+.srv .s-pl small{font-size:11px;color:#b3bcd2;font-weight:600}
+.srv .s-play{width:34px;height:34px;border-radius:10px;background:rgba(10,14,24,.45);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(6px);color:#fff;display:grid;place-items:center;transition:.22s}
+.srv .s-play svg{width:14px;height:14px}
+.srv:hover .s-play,.srv.focused .s-play{background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 55%,#fff));color:#04121c;border-color:transparent;box-shadow:0 6px 18px color-mix(in srgb,var(--accent) 45%,transparent)}
+.srv .s-play.off{background:rgba(140,160,220,.14);color:var(--dim);border-color:transparent;box-shadow:none}
+.srv .s-edge{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.07);z-index:2}
+.srv .s-edge i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--accent));transition:width .7s}
+.srv .s-edge i.full{background:linear-gradient(90deg,var(--amber),var(--red))}
+body[data-density="compact"] .srv .s-top{top:10px}
+body[data-density="compact"] .srv .s-bot{bottom:9px}
+.modebanner{display:flex;align-items:center;gap:13px;margin:26px 0 16px;padding:13px 17px;border-radius:16px;border:1px solid color-mix(in srgb,var(--mc) 40%,var(--line));background:linear-gradient(100deg,color-mix(in srgb,var(--mc) 14%,transparent),transparent 65%);flex-wrap:wrap}
+.modebanner svg{width:20px;height:20px;color:var(--mc)}
+.modebanner b{font-family:var(--fd);font-size:16px;text-transform:lowercase}
+.modebanner span{font-size:12px;color:var(--muted);font-weight:600}
+.modebanner button{margin-left:auto}
+.empty{padding:56px 20px;text-align:center;border:1px dashed var(--line2);border-radius:18px;color:var(--muted)}
+.empty svg{width:40px;height:40px;color:var(--dim);margin:0 auto 14px}
+.empty b{display:block;font-family:var(--fd);font-size:16px;color:#fff;margin-bottom:8px}
+.empty p{font-size:13px;margin-bottom:18px;line-height:1.6}
+
+.mapsgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.mtile{position:relative;height:196px;border-radius:16px;overflow:hidden;border:1px solid var(--line);cursor:pointer;background:#0d1120;transition:transform .3s cubic-bezier(.2,.7,.2,1),border-color .3s,box-shadow .3s;animation:cardIn .5s cubic-bezier(.2,.7,.2,1) backwards}
+.mtile:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 50%,transparent);box-shadow:0 20px 48px -16px color-mix(in srgb,var(--accent) 40%,transparent)}
+.mtile .m-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.mtile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+.mtile:hover img,.mtile.focused img{transform:scale(1.07)}
+.mtile .m-shade{position:absolute;inset:0;background:linear-gradient(185deg,rgba(4,6,12,.1) 30%,rgba(4,6,12,.9))}
+.mtile .m-expand{position:absolute;top:10px;right:10px;z-index:2}
+.mtile .m-new{position:absolute;top:10px;left:10px;z-index:2;font-size:8.5px;font-weight:800;letter-spacing:1px;color:#1a1200;background:var(--sand);padding:3px 8px;border-radius:8px;box-shadow:0 0 14px color-mix(in srgb,var(--sand) 50%,transparent)}
+.mtile .m-body{position:absolute;left:15px;right:15px;bottom:13px;z-index:2}
+.mtile .m-name{font-family:var(--fm);font-weight:700;font-size:13px;letter-spacing:1px;text-shadow:0 2px 10px rgba(0,0,0,.9);word-break:break-all}
+.mtile .m-stats{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.mtile .m-chip{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;color:#cfd6ea;background:rgba(3,5,10,.6);border:1px solid rgba(255,255,255,.14);padding:4px 9px;border-radius:8px;backdrop-filter:blur(5px)}
+.mtile .m-chip svg{width:11px;height:11px;color:var(--accent)}
+.mtile .m-chip.on{color:var(--green)}
+.mtile .m-chip.on svg{color:var(--green)}
+
+#lightbox{position:fixed;inset:0;z-index:970;background:rgba(2,4,8,.84);backdrop-filter:blur(18px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;opacity:0;visibility:hidden;transition:.3s}
+#lightbox.open{opacity:1;visibility:visible}
+#lightbox .lb-stage{position:relative;width:min(1100px,94vw);max-height:64vh;aspect-ratio:16/9;border-radius:18px;overflow:hidden;border:1px solid var(--line2);box-shadow:0 50px 130px rgba(0,0,0,.85);transform:scale(.97);transition:.35s cubic-bezier(.2,.7,.2,1);background:#0a0f1c}
+#lightbox.open .lb-stage{transform:none}
+#lightbox .lb-ph{position:absolute;inset:0;background-size:cover;background-position:center;display:grid;place-items:center}
+#lightbox .lb-ph span{font-family:var(--fd);font-weight:900;font-size:clamp(20px,4vw,44px);color:rgba(255,255,255,.16);letter-spacing:-1px;text-transform:uppercase;padding:0 20px;text-align:center;word-break:break-all}
+#lightbox .lb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#lightbox .lb-bar{width:min(1100px,94vw);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#lightbox .lb-name{font-family:var(--fd);font-weight:800;font-size:20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;word-break:break-all}
+#lightbox .lb-name .lb-new{font-family:var(--fb);font-size:9px;font-weight:800;letter-spacing:1px;color:#1a1200;background:var(--sand);padding:3px 8px;border-radius:7px}
+#lightbox .lb-sub{font-family:var(--fm);font-size:11px;color:var(--muted);margin-top:4px}
+#lightbox .lb-actions{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+#lightbox .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:50%;border:1px solid var(--line2);background:rgba(8,12,22,.7);color:#fff;display:grid;place-items:center;transition:.2s;backdrop-filter:blur(8px);padding:0;z-index:2}
+#lightbox .lb-nav:hover{border-color:var(--accent);box-shadow:0 0 20px color-mix(in srgb,var(--accent) 40%,transparent)}
+#lightbox .lb-nav svg{width:18px;height:18px}
+#lightbox .lb-prev{left:22px}#lightbox .lb-next{right:22px}
+#lightbox .lb-close{position:absolute;top:20px;right:22px;transform:none}
+#lightbox .lb-count{position:absolute;top:26px;left:26px;font-family:var(--fm);font-size:11px;color:var(--muted);letter-spacing:1px;z-index:2}
+
+.panel{border-radius:18px;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(14px);padding:22px;margin-bottom:16px}
+.rules{display:flex;flex-direction:column;gap:11px}
+.rule{display:flex;gap:14px;padding:15px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(6,10,18,.5);transition:.2s}
+.rule:hover{border-color:var(--line2);transform:translateX(4px)}
+.rule .n{font-family:var(--fd);font-weight:800;color:var(--accent);width:26px;flex-shrink:0}
+.rule b{display:block;font-size:13.5px;margin-bottom:4px}
+.rule p{font-size:12.5px;color:var(--muted);line-height:1.55}
+.ban{display:flex;align-items:center;gap:13px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(6,10,18,.5);margin-bottom:10px}
+.ban .b-ic{width:36px;height:36px;border-radius:50%;background:color-mix(in srgb,var(--red) 14%,transparent);color:var(--red);display:grid;place-items:center;flex-shrink:0}
+.ban .b-ic svg{width:15px;height:15px}
+.ban b{font-size:13.5px;display:block}
+.ban small{font-size:11.5px;color:var(--muted)}
+.ban .b-term{margin-left:auto;font-family:var(--fm);font-size:10.5px;color:var(--red);border:1px solid color-mix(in srgb,var(--red) 45%,transparent);padding:5px 10px;border-radius:9px;white-space:nowrap}
+.skins{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px}
+.skin{border-radius:16px;border:1px solid var(--line);background:rgba(6,10,18,.5);overflow:hidden;transition:.25s}
+.skin:hover{transform:translateY(-4px);border-color:var(--rc);box-shadow:0 14px 34px -12px color-mix(in srgb,var(--rc) 45%,transparent)}
+.skin .sk-art{height:104px;display:grid;place-items:center;color:var(--rc);background:radial-gradient(80% 90% at 50% 100%,color-mix(in srgb,var(--rc) 24%,transparent),transparent)}
+.skin .sk-art svg{width:58px;height:58px;filter:drop-shadow(0 6px 16px color-mix(in srgb,var(--rc) 55%,transparent));transition:.3s}
+.skin:hover .sk-art svg{transform:rotate(-8deg) scale(1.12)}
+.skin .sk-body{padding:13px 14px}
+.skin small{font-family:var(--fm);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--rc)}
+.skin b{display:block;font-size:12.5px;margin:5px 0 10px}
+.sk-btn{width:100%;padding:9px;border-radius:10px;border:1px solid var(--line2);color:var(--muted);font-size:11.5px;font-weight:700;transition:.2s}
+.sk-btn:hover{color:#fff;border-color:var(--rc)}
+
+.shop{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.tier{--tc:var(--accent);border-radius:20px;border:1px solid var(--line);background:rgba(6,10,18,.6);position:relative;display:flex;flex-direction:column;overflow:hidden;transition:.28s cubic-bezier(.2,.7,.2,1)}
+.tier:hover{transform:translateY(-5px);border-color:var(--tc);box-shadow:0 26px 60px -18px color-mix(in srgb,var(--tc) 55%,transparent)}
+.tier .t-art{height:168px;position:relative;background-size:cover;background-position:center;background-color:#0a0f1c}
+.tier .t-art::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,6,12,.12),rgba(6,10,18,.96))}
+.tier .t-art .t-ic{position:absolute;inset:0;display:grid;place-items:center;color:var(--tc);opacity:.85}
+.tier .t-art .t-ic svg{width:56px;height:56px;filter:drop-shadow(0 8px 22px color-mix(in srgb,var(--tc) 60%,transparent))}
+.tier .t-badge{position:absolute;top:12px;right:12px;z-index:2;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;background:var(--tc);color:#04121c;padding:5px 12px;border-radius:20px}
+.tier .t-name{position:absolute;left:18px;bottom:12px;z-index:2;font-family:var(--fd);font-weight:900;font-size:22px;letter-spacing:1px;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.9)}
+.tier .t-body{padding:18px;display:flex;flex-direction:column;flex:1}
+.tier .t-price{font-family:var(--fd);font-size:30px;font-weight:800;color:var(--tc)}
+.tier .t-price small{font-size:12px;color:var(--dim);font-weight:600;font-family:var(--fb)}
+.tier ul{list-style:none;margin:16px 0 20px;display:flex;flex-direction:column;gap:9px;flex:1}
+.tier li{display:flex;gap:9px;font-size:12.5px;color:var(--muted);font-weight:600;line-height:1.4}
+.tier li svg{width:14px;height:14px;color:var(--tc);flex-shrink:0;margin-top:1px}
+.tier .t-buy{padding:14px;border-radius:13px;font-weight:800;font-size:13px;color:#04121c;background:linear-gradient(120deg,var(--tc),color-mix(in srgb,var(--tc) 60%,#fff));display:flex;align-items:center;justify-content:center;gap:9px;transition:.2s}
+.tier .t-buy svg{width:15px;height:15px}
+.tier .t-buy:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.shop-note{display:flex;gap:14px;align-items:flex-start;margin-top:18px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);background:rgba(6,10,18,.5)}
+.shop-note svg{width:18px;height:18px;color:var(--accent);flex-shrink:0;margin-top:2px}
+.shop-note b{display:block;font-size:13px;margin-bottom:5px}
+.shop-note p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.shop-note code{font-family:var(--fm);font-size:11.5px;color:var(--amber);background:rgba(0,0,0,.35);padding:2px 6px;border-radius:5px}
+
+.hintbar{height:var(--hint);flex-shrink:0;display:flex;align-items:center;gap:24px;padding:0 clamp(14px,2.6vw,40px);
+  background:linear-gradient(0deg,rgba(4,6,12,.9),rgba(4,6,12,.55) 85%,transparent);backdrop-filter:blur(16px);position:relative;z-index:6}
+.hint{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:700;color:var(--muted);transition:.15s}
+.hint .kb{font-family:var(--fm);font-size:10px;color:var(--text);border:1px solid var(--line2);background:rgba(10,16,28,.7);padding:4px 9px;border-radius:7px;font-style:normal;box-shadow:0 2px 0 rgba(0,0,0,.4);transition:.15s}
+.hint.flash{color:#fff}
+.hint.flash .kb{background:var(--accent);color:#04121c;border-color:var(--accent);box-shadow:0 0 16px color-mix(in srgb,var(--accent) 60%,transparent);transform:translateY(1px)}
+.hintbar .hb-brand{margin-left:auto;font-family:var(--fm);font-size:9.5px;letter-spacing:2px;color:var(--dim);text-transform:uppercase}
+.hintbar .hb-pad{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--dim);font-weight:700}
+.hintbar .hb-pad svg{width:15px;height:15px;color:var(--green)}
+
+#guide{position:fixed;top:0;left:0;bottom:0;width:330px;max-width:88vw;z-index:900;background:rgba(6,9,17,.94);backdrop-filter:blur(26px);
+  border-right:1px solid var(--line2);transform:translateX(-104%);transition:transform .4s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column;padding:22px;overflow-y:auto}
+#guide.open{transform:none;box-shadow:40px 0 100px rgba(0,0,0,.6)}
+.g-head{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.g-head .mark{width:38px;height:38px;display:grid;place-items:center}
+.g-head .mark img,.g-head .mark svg{width:36px;height:36px}
+.g-head b{font-family:var(--fd);font-weight:900;letter-spacing:2px;font-size:15px}
+.g-head small{display:block;font-family:var(--fm);font-size:8.5px;letter-spacing:2px;color:var(--dim)}
+.g-profile{display:flex;align-items:center;gap:13px;padding:15px;border-radius:16px;border:1px solid var(--line2);background:rgba(12,18,32,.7);margin-bottom:6px}
+.g-profile.authed{border-color:color-mix(in srgb,var(--accent) 45%,transparent);box-shadow:0 0 24px -8px color-mix(in srgb,var(--accent) 45%,transparent)}
+.g-profile .av{position:relative;width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 50% 32%,#1c2740,#0a0f1c);border:1px solid var(--line2);display:grid;place-items:center;color:#fff;flex-shrink:0;overflow:hidden}
+.g-profile.authed .av{border-color:var(--accent)}
+.g-profile .av .av-in{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:15px;color:#04121c;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.g-profile .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.g-profile .av svg{width:22px;height:22px;position:relative}
+.g-profile .g-txt{min-width:0}
+.g-profile b{font-size:14px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px}
+.g-profile small{font-size:9.5px;font-weight:700;font-family:var(--fm);display:flex;align-items:center;gap:5px}
+.g-profile small .sd{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);flex-shrink:0}
+.g-profile small .sd.warn{background:var(--amber);box-shadow:0 0 7px var(--amber)}
+.g-profile .g-pacts{margin-left:auto;display:flex;gap:6px}
+.g-steamid{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:10px;color:var(--dim);padding:0 4px 10px}
+.g-steamid button{color:var(--muted);display:grid;place-items:center}
+.g-steamid button:hover{color:var(--accent)}
+.g-steamid svg{width:12px;height:12px}
+.g-sec{font-family:var(--fm);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--dim);margin:16px 0 9px}
+.g-item{display:flex;align-items:center;gap:12px;width:100%;padding:12px 13px;border-radius:12px;color:var(--muted);font-size:13px;font-weight:700;transition:.18s;text-align:left}
+.g-item svg{width:16px;height:16px}
+.g-item:hover{background:rgba(255,255,255,.06);color:#fff}
+.g-item:hover svg{color:var(--accent)}
+.g-view{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:rgba(4,7,13,.5);margin-bottom:8px;transition:.18s}
+.g-view:hover{border-color:var(--line2)}
+.g-view .v-apply{flex:1;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12.5px;font-weight:700;text-align:left;min-width:0}
+.g-view .v-apply svg{width:14px;height:14px;color:var(--accent);flex-shrink:0}
+.g-view .v-apply span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-view .v-apply small{display:block;font-size:9.5px;color:var(--dim);font-weight:600}
+.g-view .sact{width:26px;height:26px}
+.g-view .sact svg{width:12px;height:12px}
+.g-empty{font-size:11.5px;color:var(--dim);padding:4px 2px 8px;line-height:1.5}
+.g-accent{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g-accent button{display:flex;align-items:center;gap:9px;padding:11px 12px;border-radius:11px;border:1px solid var(--line);background:rgba(4,7,13,.5);color:var(--muted);font-size:12px;font-weight:700;transition:.2s}
+.g-accent button i{width:14px;height:14px;border-radius:50%;background:var(--sw);box-shadow:0 0 10px var(--sw);flex-shrink:0}
+.g-accent button.on{color:#fff;border-color:var(--sw);box-shadow:inset 0 0 0 1px var(--sw)}
+.g-toggle{display:flex;align-items:center;gap:12px;width:100%;padding:12px 13px;border-radius:12px;color:var(--muted);font-size:13px;font-weight:700}
+.g-toggle svg{width:16px;height:16px}
+.g-toggle .sw{margin-left:auto;width:40px;height:22px;border-radius:20px;background:rgba(140,160,220,.2);position:relative;transition:.25s;flex-shrink:0}
+.g-toggle .sw::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.25s}
+.g-toggle.on{color:#fff}
+.g-toggle.on .sw{background:var(--accent)}
+.g-toggle.on .sw::after{left:21px}
+.g-keys{display:flex;flex-direction:column;gap:7px;font-size:11.5px;color:var(--muted);font-weight:600}
+.g-keys div{display:flex;justify-content:space-between;align-items:center}
+.g-keys .kb{font-family:var(--fm);font-size:9.5px;color:var(--dim);border:1px solid var(--line2);padding:3px 8px;border-radius:6px}
+.g-foot{margin-top:auto;padding-top:18px;font-family:var(--fm);font-size:9px;letter-spacing:1.5px;color:var(--dim);line-height:2}
+.g-foot a{color:var(--muted)}
+.g-foot a:hover{color:var(--accent)}
+#guideScrim{position:fixed;inset:0;z-index:890;background:rgba(2,4,8,.5);backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:.3s}
+#guideScrim.open{opacity:1;visibility:visible}
+
+#searchOver{position:fixed;inset:0;z-index:950;background:rgba(2,4,8,.66);backdrop-filter:blur(14px);display:grid;place-items:start center;padding:11vh 16px 16px;opacity:0;visibility:hidden;transition:.25s}
+#searchOver.open{opacity:1;visibility:visible}
+.searchbox{width:min(660px,100%);border-radius:20px;border:1px solid var(--line2);background:rgba(8,12,22,.97);box-shadow:0 40px 100px rgba(0,0,0,.8);overflow:hidden;transform:translateY(-12px) scale(.98);transition:.3s cubic-bezier(.2,.7,.2,1)}
+#searchOver.open .searchbox{transform:none}
+.sb-input{display:flex;align-items:center;gap:13px;padding:18px 20px;border-bottom:1px solid var(--line)}
+.sb-input svg{width:18px;height:18px;color:var(--accent)}
+.sb-input input{flex:1;background:none;border:none;color:#fff;font-size:16px;font-weight:600;outline:none;min-width:0}
+.sb-input input::placeholder{color:var(--dim)}
+.sb-input .esc{font-family:var(--fm);font-size:9.5px;color:var(--dim);border:1px solid var(--line2);padding:3px 8px;border-radius:6px}
+.sb-results{max-height:48vh;overflow-y:auto;padding:8px}
+.sb-hint{padding:26px;text-align:center;color:var(--dim);font-size:13px}
+.sb-hint .keys{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.sb-hint .keys span{font-family:var(--fm);font-size:10px;border:1px solid var(--line2);padding:4px 9px;border-radius:6px;color:var(--muted)}
+.sb-sec{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);padding:10px 14px 6px}
+.sres{display:flex;align-items:center;gap:13px;padding:12px 14px;border-radius:12px;cursor:pointer;transition:.15s}
+.sres .sr-ic{position:relative;width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background-size:cover;background-position:center;color:var(--mc);flex-shrink:0;overflow:hidden}
+.sres .sr-ic svg{width:16px;height:16px}
+.sres .sr-ic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sres .sr-tx{min-width:0}
+.sres b{font-size:13.5px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sres small{font-family:var(--fm);font-size:10px;color:var(--dim);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sres .sr-right{margin-left:auto;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sres .sr-pl{font-family:var(--fm);font-size:11px;color:var(--green);font-weight:700}
+.sres .sr-mode{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--mc);border:1px solid color-mix(in srgb,var(--mc) 45%,transparent);padding:3px 8px;border-radius:6px}
+
+#modalOver{position:fixed;inset:0;z-index:960;background:rgba(2,4,8,.7);backdrop-filter:blur(14px);display:grid;place-items:center;padding:20px;opacity:0;visibility:hidden;transition:.25s;overflow-y:auto}
+#modalOver.open{opacity:1;visibility:visible}
+#modalBox{width:min(600px,100%);max-height:86vh;overflow-y:auto;border-radius:22px;border:1px solid var(--line2);background:linear-gradient(170deg,#0e1426,#080c18);box-shadow:0 50px 120px rgba(0,0,0,.85);transform:translateY(16px) scale(.97);transition:.3s cubic-bezier(.2,.7,.2,1)}
+#modalOver.open #modalBox{transform:none}
+.mo-banner{height:164px;background-size:cover;background-position:center;position:relative;cursor:zoom-in}
+.mo-banner::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,12,24,.04),rgba(8,12,24,.95))}
+.mo-head{display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(10,15,28,.96);backdrop-filter:blur(10px);z-index:2}
+.mo-ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:color-mix(in srgb,var(--mc,var(--accent)) 16%,rgba(10,16,28,.8));color:var(--mc,var(--accent));flex-shrink:0}
+.mo-ic svg{width:19px;height:19px}
+.mo-head b{font-family:var(--fd);font-size:15px;display:block}
+.mo-head small{color:var(--muted);font-size:11.5px;font-weight:600;word-break:break-all}
+.mo-x{margin-left:auto;width:34px;height:34px;border-radius:50%;border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;transition:.2s;padding:0;flex-shrink:0}
+.mo-x:hover{color:#fff;border-color:var(--red)}
+.mo-x svg{width:14px;height:14px}
+.mo-body{padding:22px}
+.cn-meta{display:flex;gap:9px;flex-wrap:wrap}
+.cn-chip{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:700;color:var(--muted);border:1px solid var(--line);padding:7px 12px;border-radius:10px;background:rgba(4,7,13,.5)}
+.cn-chip svg{width:13px;height:13px;color:var(--mc,var(--accent))}
+.cn-ip{display:flex;align-items:center;gap:12px;padding:16px 18px;border-radius:14px;border:1px solid var(--line2);background:rgba(4,7,13,.7);margin:16px 0}
+.cn-ip code{flex:1;font-family:var(--fm);font-size:17px;font-weight:700;color:var(--accent);letter-spacing:.5px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.cn-steps{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+.cn-step{display:flex;gap:13px;font-size:13px;color:var(--muted);line-height:1.55}
+.cn-step .n{width:24px;height:24px;border-radius:50%;background:rgba(140,160,220,.12);display:grid;place-items:center;font-family:var(--fm);font-size:10.5px;font-weight:700;color:var(--accent);flex-shrink:0}
+.cn-step code{font-family:var(--fm);font-size:11.5px;background:rgba(0,0,0,.4);border:1px solid var(--line);padding:2px 7px;border-radius:6px;color:var(--amber);word-break:break-all}
+.cn-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 26px;border-radius:14px;font-weight:800;font-size:13.5px;color:#04121c;background:linear-gradient(120deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#fff));box-shadow:0 8px 26px -6px color-mix(in srgb,var(--accent) 55%,transparent);transition:.2s}
+.btn-primary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn-primary svg{width:15px;height:15px}
+.btn-sec{display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:14px;border:1px solid var(--line2);color:#fff;font-weight:700;font-size:12.5px;transition:.2s}
+.btn-sec:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sec svg{width:14px;height:14px}
+.btn-sec.faved{color:var(--amber);border-color:var(--amber)}
+.btn-sec.faved svg{fill:var(--amber)}
+.form{display:flex;flex-direction:column;gap:13px}
+.form label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.4px;text-transform:uppercase}
+.form input{height:46px;border-radius:12px;border:1px solid var(--line2);background:rgba(4,7,13,.7);color:#fff;padding:0 14px;font-size:14px;font-weight:600;outline:none;transition:.2s;width:100%}
+.form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent)}
+.steam-hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:6px 0 18px}
+.steam-hero .st-ic{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,#1b2838,#2a475e);display:grid;place-items:center;color:#66c0f4;margin-bottom:14px;box-shadow:0 12px 34px rgba(102,192,244,.25)}
+.steam-hero .st-ic svg{width:30px;height:30px}
+.steam-hero p{font-size:12.5px;color:var(--muted);line-height:1.6;max-width:420px}
+.auth-progress{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1px solid var(--line2);background:rgba(4,7,13,.6);margin-bottom:14px}
+.auth-progress .spin{width:18px;height:18px;border-radius:50%;border:2px solid rgba(140,160,220,.25);border-top-color:var(--accent);animation:spin .8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.auth-progress b{font-size:13px;display:block}
+.auth-progress small{font-size:11px;color:var(--muted)}
+.netrow{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:rgba(6,10,18,.5);margin-bottom:10px}
+.netrow .n-ic{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent);flex-shrink:0}
+.netrow .n-ic svg{width:16px;height:16px}
+.netrow b{font-size:13.5px;display:block}
+.netrow small{font-size:11px;color:var(--muted)}
+.netrow .n-val{margin-left:auto;text-align:right}
+.netrow .n-val b{font-family:var(--fm);font-size:15px;color:var(--green)}
+.netrow .n-val small{font-family:var(--fm);font-size:9.5px;color:var(--dim)}
+.netrow .n-bar{width:90px;height:4px;border-radius:4px;background:rgba(140,160,220,.14);overflow:hidden;margin-top:6px;margin-left:auto}
+.netrow .n-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--accent))}
+
+#chatPanel{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:92vw;z-index:940;background:rgba(6,9,17,.95);backdrop-filter:blur(26px);border-left:1px solid var(--line2);transform:translateX(104%);transition:transform .4s cubic-bezier(.2,.7,.2,1);display:flex;flex-direction:column}
+#chatPanel.open{transform:none;box-shadow:-40px 0 100px rgba(0,0,0,.6)}
+.cp-head{display:flex;align-items:center;gap:12px;padding:18px;border-bottom:1px solid var(--line)}
+.cp-head .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:12px;color:#04121c;overflow:hidden;flex-shrink:0}
+.cp-head .av img{width:100%;height:100%;object-fit:cover}
+.cp-head b{font-size:14px;display:block}
+.cp-head span{font-size:10.5px;color:var(--green);font-weight:700}
+.cp-close{margin-left:auto;width:32px;height:32px;border-radius:50%;color:var(--muted);display:grid;place-items:center;padding:0}
+.cp-close:hover{color:#fff}
+.cp-close svg{width:14px;height:14px}
+.cp-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:84%;padding:11px 14px;border-radius:15px;font-size:13px;line-height:1.5;animation:msgIn .3s ease;word-break:break-word}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg.bot{align-self:flex-start;background:rgba(16,22,38,.9);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg.me{align-self:flex-end;background:linear-gradient(120deg,var(--accent),var(--accent2));border-bottom-right-radius:4px;color:#04121c;font-weight:600}
+.msg code{font-family:var(--fm);font-size:11px;background:rgba(0,0,0,.35);padding:2px 6px;border-radius:5px;color:var(--amber)}
+.typing{display:flex;gap:4px;padding:13px 15px;align-self:flex-start;background:rgba(16,22,38,.9);border:1px solid var(--line);border-radius:15px;border-bottom-left-radius:4px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:tp 1s infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes tp{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-4px);opacity:1}}
+.cp-chips{display:flex;gap:6px;padding:0 14px 10px;flex-wrap:wrap}
+.cp-chip{padding:7px 12px;border-radius:20px;border:1px solid var(--line2);color:var(--muted);font-size:11px;font-weight:700;transition:.2s}
+.cp-chip:hover{color:var(--accent);border-color:var(--accent)}
+.cp-input{display:flex;gap:8px;padding:14px;border-top:1px solid var(--line)}
+.cp-input input{flex:1;height:42px;border-radius:12px;border:1px solid var(--line);background:rgba(4,7,13,.7);color:#fff;padding:0 14px;font-size:13px;font-weight:600;outline:none;min-width:0}
+.cp-input input:focus{border-color:var(--accent)}
+.cp-send{width:42px;height:42px;border-radius:12px;background:linear-gradient(120deg,var(--accent),var(--accent2));color:#04121c;display:grid;place-items:center;transition:.2s;padding:0;flex-shrink:0}
+.cp-send:hover{transform:scale(1.06)}
+.cp-send svg{width:16px;height:16px}
+
+#toasts{position:fixed;top:78px;right:20px;z-index:1200;display:flex;flex-direction:column;gap:10px;align-items:flex-end;pointer-events:none}
+.toast{--tc:var(--green);pointer-events:auto;display:flex;align-items:center;gap:12px;padding:14px 18px;border-radius:16px;border:1px solid var(--line2);
+  background:rgba(8,12,22,.95);backdrop-filter:blur(16px);box-shadow:0 18px 50px rgba(0,0,0,.6);font-size:13px;font-weight:700;cursor:pointer;
+  animation:toastIn .4s cubic-bezier(.2,.7,.2,1);position:relative;overflow:hidden;max-width:min(430px,88vw)}
+.toast.out{animation:toastOut .3s ease forwards}
+.toast .t-ic{width:32px;height:32px;border-radius:50%;background:color-mix(in srgb,var(--tc) 16%,transparent);color:var(--tc);display:grid;place-items:center;flex-shrink:0}
+.toast .t-ic svg{width:15px;height:15px}
+.toast small{display:block;font-size:10px;color:var(--dim);font-weight:600;margin-top:2px;line-height:1.4}
+.toast .t-act{margin-left:6px;padding:7px 13px;border-radius:9px;border:1px solid color-mix(in srgb,var(--tc) 55%,transparent);color:var(--tc);font-size:11px;font-weight:800;flex-shrink:0;transition:.15s}
+.toast .t-act:hover{background:color-mix(in srgb,var(--tc) 14%,transparent)}
+.toast::after{content:'';position:absolute;bottom:0;left:0;height:2px;background:var(--tc);width:100%;transform-origin:left;animation:tprog 5s linear forwards}
+@keyframes tprog{to{transform:scaleX(0)}}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(30px)}}
+
+body.no-motion *,body.no-motion *::before,body.no-motion *::after{animation:none!important;transition:none!important}
+body.no-motion #boot{display:none}
+body.no-motion .mapgroup{opacity:1;transform:none}
+@media (max-width:1280px){.sgrid{grid-template-columns:repeat(2,1fr)}.actrow{grid-template-columns:repeat(2,1fr)}.tabsnav{max-width:40vw}}
+@media (max-width:760px){
+  :root{--top:58px;--hint:48px}
+  .brand small,.clockbox span{display:none}
+  .tabsnav{display:none}
+  .tile{width:112px;height:112px;border-radius:14px}
+  .tile.focused{transform:scale(1.08)}
+  .actrow{gap:10px}.act{min-height:112px;padding:13px}
+  .fp-title{font-size:34px}
+  .sgrid{grid-template-columns:1fr!important}
+  .mapsgrid{grid-template-columns:1fr 1fr}
+  .mtile{height:160px}
+  .modehero{height:auto;padding:14px 0}
+  .modehero .mh-in{padding:0 14px;gap:12px}
+  .modehero .mh-stats{width:100%}
+  .hint{font-size:10.5px;gap:6px}.hintbar{gap:12px}
+  .hintbar .hb-brand,.online-chip{display:none}
+  #toasts{top:66px;right:12px}
+  .mg-share{display:none}
+  .livebadge{display:none}
+  #lightbox .lb-prev{left:8px}#lightbox .lb-next{right:8px}
+  #lightbox .lb-count{left:14px;top:16px}
+}
+@media (max-width:520px){.actrow{grid-template-columns:1fr}.clockbox{display:none}.srv .s-map{display:none}.cchip span.lbl{display:none}.cchip{padding:0 12px}.mapsgrid{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}#boot{display:none}.mapgroup{opacity:1;transform:none}}
+</style>
+</head>
+<body data-accent="blue" data-density="cozy" data-cols="auto">
+
+<div id="boot" aria-hidden="true">
+  <div class="b-mark" id="bootMark"></div>
+  <div class="b-word">WON<em>TAKE</em></div>
+  <div class="b-dots"><i></i><i></i><i></i></div>
+  <div class="b-sub">wontake · counter-strike 2 network</div>
+</div>
+
+<div id="ambient" aria-hidden="true">
+  <div class="amb" id="ambA"></div>
+  <div class="amb" id="ambB"></div>
+  <div class="tint"></div>
+  <div class="subscrim"></div>
+  <div class="grain"></div>
+</div>
+<canvas id="dust" aria-hidden="true"></canvas>
+
+<div id="app">
+  <header class="topbar">
+    <div class="brand" data-action="home" role="button" tabindex="0">
+      <span class="mark" id="brandMark"></span>
+      <b>WON<em>TAKE</em></b><small>CS2</small>
+    </div>
+    <nav class="tabsnav" id="tabsnav"></nav>
+    <div class="tb-right">
+      <button class="online-chip" data-action="all" title="Все серверы"><span class="dot"></span><span id="chipOnline">0</span>&nbsp;online</button>
+      <div class="clockbox"><b id="clock">--:--</b><span id="dateStr"></span></div>
+      <button class="tb-ic" id="sndBtn" data-action="tg-sound" title="Звук интерфейса"></button>
+      <button class="tb-ic" data-action="net" title="Состояние сети" data-ic="wifi"></button>
+      <button class="tb-ic" data-action="guide" title="Меню (G)" data-ic="gear"></button>
+      <button class="avatarbtn" id="avatarBtn" data-action="guide" title="Профиль"></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="screen" id="scr-home">
+      <div class="tilesrow" id="tiles"></div>
+      <div class="focuspanel">
+        <div class="fp-tag" id="fpTag"></div>
+        <h1 class="fp-title" id="fpTitle"></h1>
+        <p class="fp-desc" id="fpDesc"></p>
+        <div class="fp-meta" id="fpMeta"></div>
+        <div class="fp-btns" id="fpBtns"></div>
+      </div>
+      <div class="actrow" id="acts"></div>
+    </section>
+
+    <section class="screen" id="scr-servers">
+      <div class="scr-head">
+        <button class="backbtn" data-action="home" data-foc data-ic="back" title="Назад (Esc)"></button>
+        <div><h2 id="svTitle">серверы</h2><div class="sh-sub" id="svSub"></div></div>
+        <div class="sh-right"><button class="btn-sec" data-action="all" data-foc><span data-ic="grid"></span>все сервера</button></div>
+      </div>
+      <div id="svHero"></div>
+      <div class="svtabs" id="svTabs"></div>
+      <div class="ctrlbar">
+        <label class="csearch"><span data-ic="search"></span><input id="srvSearch" type="text" placeholder="Поиск: название, карта, IP…" autocomplete="off"></label>
+        <select class="csel" id="srvSort" title="Сортировка"><option value="players">Сначала полные</option><option value="free">Сначала свободные</option><option value="name">По названию</option><option value="ping">По пингу</option></select>
+        <select class="csel" id="srvCols" title="Колонок"><option value="auto">Авто</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+        <button class="cchip" id="fltActive" data-action="flt-active" data-foc><span data-ic="users"></span><span class="lbl">с игроками</span></button>
+        <button class="cchip fav" id="fltFav" data-action="flt-fav" data-foc><span data-ic="star"></span><span class="lbl">избранное</span></button>
+        <button class="cchip neutral" id="tgDensity" data-action="tg-density" data-foc title="Плотность карточек"><span data-ic="list"></span><span class="lbl">компакт</span></button>
+        <button class="cchip neutral on" id="tgPing" data-action="tg-ping" data-foc title="Показывать пинг"><span data-ic="signal"></span><span class="lbl">пинг</span></button>
+        <button class="cchip neutral on" id="tgMap" data-action="tg-map" data-foc title="Показывать карту"><span data-ic="map"></span><span class="lbl">карта</span></button>
+        <button class="cchip neutral" data-action="save-view" data-foc title="Сохранить текущий вид"><span data-ic="bookmark"></span><span class="lbl">вид</span></button>
+        <div class="livebadge"><i></i>LIVE · <span id="liveTime">--:--</span></div>
+      </div>
+      <div id="svFresh"></div>
+      <div class="drag-hint"><span data-ic="star"></span>Избранное: перетаскивайте карточки, чтобы задать свой порядок.</div>
+      <div id="svRoot"></div>
+    </section>
+
+    <section class="screen" id="scr-maps">
+      <div class="scr-head">
+        <button class="backbtn" data-action="home" data-foc data-ic="back"></button>
+        <div><h2><span class="h-ic" style="--mc:var(--cyan)"><span data-ic="layers"></span></span>карты сети</h2><div class="sh-sub" id="mapsSub"></div></div>
+      </div>
+      <div class="ctrlbar">
+        <label class="csearch"><span data-ic="search"></span><input id="mapSearch" type="text" placeholder="Поиск карты: mirage, sandstone, seek_town…" autocomplete="off"></label>
+        <select class="csel" id="mapSort"><option value="name">По названию</option><option value="players">По онлайну</option><option value="servers">По числу серверов</option></select>
+        <button class="cchip sand" id="mapFresh" data-action="map-fresh" data-foc><span data-ic="spark"></span><span class="lbl">новинки</span></button>
+        <div class="livebadge"><i></i><span id="mapCount">0</span> КАРТ</div>
+      </div>
+      <div class="mapsgrid" id="mapsGrid"></div>
+    </section>
+
+    <section class="screen" id="scr-shop">
+      <div class="scr-head">
+        <button class="backbtn" data-action="home" data-foc data-ic="back"></button>
+        <div><h2><span class="h-ic" style="--mc:var(--amber)"><span data-ic="bag"></span></span>магазин</h2><div class="sh-sub" id="shopSub"></div></div>
+      </div>
+      <div class="shop" id="shopBody"></div>
+      <div class="shop-note"><span data-ic="info"></span><div><b>Как активируется привилегия</b><p>После оплаты привилегия выдаётся автоматически в течение 5 минут на все серверы сети. Проверить статус можно в игре командой <code>!vip</code>, скины — <code>!ws</code>, ножи — <code>!knife</code>, перчатки — <code>!gloves</code>. Вопросы по оплате — в поддержку.</p></div></div>
+    </section>
+
+    <section class="screen" id="scr-skins"><div class="scr-head"><button class="backbtn" data-action="home" data-foc data-ic="back"></button><div><h2><span class="h-ic" style="--mc:var(--mag)"><span data-ic="knife"></span></span>скины</h2><div class="sh-sub">!ws · !knife · !gloves — бесплатно на всех серверах</div></div></div><div id="skinsBody"></div></section>
+    <section class="screen" id="scr-bans"><div class="scr-head"><button class="backbtn" data-action="home" data-foc data-ic="back"></button><div><h2><span class="h-ic" style="--mc:var(--red)"><span data-ic="ban"></span></span>блокировки</h2><div class="sh-sub">Последние наказания · поиск по нику</div></div></div><div class="panel"><label class="csearch" style="margin-bottom:16px"><span data-ic="search"></span><input id="banSearch" type="text" placeholder="Найти ник…" autocomplete="off"></label><div id="banList"></div></div></section>
+    <section class="screen" id="scr-rules"><div class="scr-head"><button class="backbtn" data-action="home" data-foc data-ic="back"></button><div><h2><span class="h-ic" style="--mc:var(--accent)"><span data-ic="book"></span></span>правила</h2><div class="sh-sub">Действуют на всех режимах WONTAKE</div></div></div><div class="panel" id="rulesBody"></div></section>
+  </main>
+
+  <footer class="hintbar">
+    <div id="hints" style="display:flex;gap:22px;align-items:center"></div>
+    <div class="hb-pad" id="padStatus"></div>
+    <div class="hb-brand" id="hbBrand">wontake · © 2026</div>
+  </footer>
+</div>
+
+<div id="guideScrim" data-action="guide-close"></div>
+<aside id="guide">
+  <div class="g-head"><span class="mark" id="guideMark"></span><div><b>WONTAKE</b><small>ЦЕНТР УПРАВЛЕНИЯ</small></div></div>
+  <div class="g-profile" id="gProfile"></div>
+  <div class="g-steamid" id="gSteamId"></div>
+  <div id="gAuthExtra"></div>
+  <div class="g-sec">Быстрый доступ</div>
+  <button class="g-item" data-action="fav-view" data-foc><span data-ic="star"></span>Избранные серверы</button>
+  <button class="g-item" data-action="nav" data-screen="maps" data-foc><span data-ic="layers"></span>Карты сети</button>
+  <button class="g-item" data-action="nav" data-screen="shop" data-foc><span data-ic="bag"></span>Магазин</button>
+  <button class="g-item" data-action="nav" data-screen="skins" data-foc><span data-ic="knife"></span>Скины</button>
+  <button class="g-item" data-action="nav" data-screen="bans" data-foc><span data-ic="ban"></span>Блокировки</button>
+  <button class="g-item" data-action="chat-open" data-foc><span data-ic="chat"></span>Поддержка</button>
+  <div class="g-sec">Сохранённые виды</div>
+  <div id="gViews"></div>
+  <div class="g-sec">Акцент интерфейса</div>
+  <div class="g-accent" id="gAccent">
+    <button data-action="accent" data-accent="blue" data-foc style="--sw:#00a2ff"><i></i>Синий</button>
+    <button data-action="accent" data-accent="violet" data-foc style="--sw:#8b5cf6"><i></i>Фиолет</button>
+    <button data-action="accent" data-accent="green" data-foc style="--sw:#34d399"><i></i>Зелёный</button>
+    <button data-action="accent" data-accent="amber" data-foc style="--sw:#ffb020"><i></i>Янтарь</button>
+  </div>
+  <div class="g-sec">Система</div>
+  <button class="g-toggle" id="tgSound" data-action="tg-sound" data-foc><span data-ic="vol"></span>Звуки интерфейса<span class="sw"></span></button>
+  <button class="g-toggle" id="tgMotion" data-action="tg-motion" data-foc><span data-ic="bolt"></span>Анимации и фон<span class="sw"></span></button>
+  <button class="g-item" data-action="reset" data-foc style="color:var(--red)"><span data-ic="trash"></span>Сбросить настройки</button>
+  <div class="g-sec">Управление</div>
+  <div class="g-keys">
+    <div><span>Навигация</span><span class="kb">← ↑ ↓ → / стик</span></div>
+    <div><span>Выбрать</span><span class="kb">Enter</span></div>
+    <div><span>Назад</span><span class="kb">Esc</span></div>
+    <div><span>Поиск</span><span class="kb">/ или Ctrl+K</span></div>
+    <div><span>Меню</span><span class="kb">G</span></div>
+  </div>
+  <div class="g-foot">WONTAKE · сборка 2026.11<br><a href="#" data-action="info" data-doc="privacy">политика конфиденциальности</a> · <a href="#" data-action="info" data-doc="offer">договор оферты</a></div>
+</aside>
+
+<div id="searchOver">
+  <div class="searchbox">
+    <div class="sb-input"><span data-ic="search"></span><input id="globalSearch" type="text" placeholder="Найти сервер, карту или IP…" autocomplete="off"><span class="esc">ESC</span></div>
+    <div class="sb-results" id="searchResults"></div>
+  </div>
+</div>
+
+<div id="lightbox">
+  <span class="lb-count" id="lbCount"></span>
+  <button class="lb-nav lb-close" data-action="lb-close" data-foc data-ic="x" title="Закрыть"></button>
+  <button class="lb-nav lb-prev" data-action="lb-prev" data-foc data-ic="back" title="Предыдущая"></button>
+  <div class="lb-stage">
+    <div class="lb-ph" id="lbPh"><span id="lbPhName"></span></div>
+    <img class="lb-img" id="lbImg" alt="">
+  </div>
+  <button class="lb-nav lb-next" data-action="lb-next" data-foc data-ic="chevR" title="Следующая"></button>
+  <div class="lb-bar">
+    <div><div class="lb-name" id="lbName"></div><div class="lb-sub" id="lbSub"></div></div>
+    <div class="lb-actions">
+      <button class="btn-sec" data-action="lb-copy" data-foc><span data-ic="copy"></span>Имя карты</button>
+      <button class="btn-primary" data-action="lb-servers" data-foc><span data-ic="server"></span>Серверы на карте</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalOver"><div id="modalBox" role="dialog" aria-modal="true"></div></div>
+
+<aside id="chatPanel">
+  <div class="cp-head"><span class="av" id="chatAv">WT</span><div><b>Поддержка WONTAKE</b><span>онлайн · отвечаем за минуту</span></div><button class="cp-close" data-action="chat-close" data-foc data-ic="x"></button></div>
+  <div class="cp-msgs" id="chatMsgs"></div>
+  <div class="cp-chips">
+    <button class="cp-chip" data-action="chat-chip" data-q="Как подключиться к серверу?" data-foc>Как подключиться?</button>
+    <button class="cp-chip" data-action="chat-chip" data-q="Меня забанили" data-foc>Проблема с баном</button>
+    <button class="cp-chip" data-action="chat-chip" data-q="Хочу купить привилегию" data-foc>Купить привилегию</button>
+  </div>
+  <div class="cp-input"><input id="chatInput" type="text" placeholder="Сообщение…" autocomplete="off"><button class="cp-send" data-action="chat-send" data-foc data-ic="send"></button></div>
+</aside>
+
+<div id="toasts"></div>
+
+<script>
+'use strict';
+/* ==================== AUTH CAPTURE ==================== */
+const AUTH=(()=>{
+  const out={payload:null,cancelled:false,marker:false};
+  try{
+    const q=new URLSearchParams(location.search);
+    out.marker=q.get('steam')==='return';
+    out.cancelled=q.get('openid.mode')==='cancel';
+    const claimed=q.get('openid.claimed_id')||'';
+    if(claimed||q.get('openid.mode')==='id_res'||out.marker||out.cancelled){
+      const p={};for(const [k,v] of q)p[k]=v;
+      out.payload=p;
+      sessionStorage.setItem('wt_auth_pending',JSON.stringify({p,ts:Date.now()}));
+    }else{
+      const raw=sessionStorage.getItem('wt_auth_pending');
+      if(raw){const rec=JSON.parse(raw);if(rec&&rec.p&&Date.now()-rec.ts<15*60*1000){out.payload=rec.p;out.marker=true;out.cancelled=rec.p['openid.mode']==='cancel'}}
+    }
+  }catch(e){}
+  return out;
+})();
+function authPendingClear(){try{sessionStorage.removeItem('wt_auth_pending')}catch(e){}}
+function authStarted(v){try{if(v===null)sessionStorage.removeItem('wt_auth_started');else sessionStorage.setItem('wt_auth_started',JSON.stringify(v))}catch(e){}}
+function authWasStarted(){try{const r=sessionStorage.getItem('wt_auth_started');if(!r)return null;const v=JSON.parse(r);return Date.now()-v.ts<15*60*1000?v:null}catch(e){return null}}
+function cleanSteamUrl(){try{history.replaceState(null,'',location.pathname+(location.hash||''))}catch(e){}}
+
+/* ==================== ICONS ==================== */
+const S=(inner,sw)=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||2)+'" stroke-linecap="round" stroke-linejoin="round">'+inner+'</svg>';
+const I={
+ghost:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c-5 0-8.5 3.8-8.5 9v10.2l3-2.2 2.7 2.2 2.8-2.2 2.8 2.2 2.7-2.2 3 2.2V11c0-5.2-3.5-9-8.5-9z"/><circle cx="9.2" cy="11" r="1.7" fill="#04060c"/><circle cx="14.8" cy="11" r="1.7" fill="#04060c"/></svg>',
+steam:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.605 0 11.979 0zM7.54 18.21l-1.473-.61c.262.543.714.999 1.314 1.25 1.297.539 2.793-.076 3.332-1.375.263-.63.264-1.319.005-1.949s-.75-1.121-1.377-1.383c-.624-.26-1.29-.249-1.878-.03l1.523.63c.956.4 1.409 1.5 1.009 2.455-.397.957-1.497 1.41-2.454 1.012zm11.415-9.303c0-1.662-1.353-3.015-3.015-3.015-1.665 0-3.015 1.353-3.015 3.015 0 1.665 1.35 3.015 3.015 3.015 1.663 0 3.015-1.35 3.015-3.015zm-5.273-.005c0-1.252 1.013-2.266 2.265-2.266 1.249 0 2.266 1.014 2.266 2.266 0 1.251-1.017 2.265-2.266 2.265-1.253 0-2.265-1.014-2.265-2.265z"/></svg>',
+home:S('<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>'),
+grid:S('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/>'),
+layers:S('<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>'),
+list:S('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>'),
+bookmark:S('<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>'),
+expand:S('<polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>'),
+external:S('<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>'),
+chevR:S('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>'),
+refresh:S('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>'),
+bag:S('<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>'),
+book:S('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'),
+knife:S('<polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"/><line x1="13" y1="19" x2="19" y2="13"/><line x1="16" y1="16" x2="20" y2="20"/><line x1="19" y1="21" x2="21" y2="19"/>'),
+ban:S('<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>'),
+search:S('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>'),
+gear:S('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>'),
+wifi:S('<path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/>'),
+back:S('<line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>'),
+x:S('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'),
+play:'<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>',
+copy:S('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+check:S('<polyline points="20 6 9 17 4 12"/>',2.6),
+star:S('<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>'),
+users:S('<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'),
+server:S('<rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>'),
+bolt:S('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+map:S('<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>'),
+signal:S('<polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>'),
+crosshair:S('<circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/>'),
+scope:S('<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>'),
+jail:S('<rect x="4" y="3" width="16" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="12" y1="3" x2="12" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/>'),
+skull:S('<circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><path d="M8 20v2h8v-2"/><path d="m12.5 17-.5-1-.5 1h1z"/><path d="M16 20a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20"/>'),
+spark:S('<path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/><path d="M5 3v4M3 5h4M19 17v4M17 19h4"/>'),
+crown:S('<path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7z"/><path d="M5 20h14"/>'),
+chat:S('<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'),
+send:S('<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>'),
+vol:S('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>'),
+volx:S('<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>'),
+trash:S('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/>'),
+info:S('<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>'),
+warn:S('<path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>'),
+lock:S('<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>'),
+gun:S('<path d="M2 9h19v3h-3v2h-4v-2h-3l-2 5H6l2-5H2z"/><path d="M14 9V7h3v2"/>'),
+terminal:S('<polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>'),
+logout:S('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>'),
+pad:S('<line x1="6" y1="11" x2="10" y2="11"/><line x1="8" y1="9" x2="8" y2="13"/><line x1="15" y1="12" x2="15.01" y2="12"/><line x1="18" y1="10" x2="18.01" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/>'),
+globe:S('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>'),
+shield:S('<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>')
+};
+const ic=n=>I[n]||'';
+function hydrateIcons(root){(root||document).querySelectorAll('[data-ic]').forEach(el=>{if(!el.firstChild)el.innerHTML=ic(el.dataset.ic)})}
+hydrateIcons();
+function optCenter(root){
+  (root||document).querySelectorAll('svg').forEach(svg=>{
+    if(svg.__opt||svg.classList.contains('flag'))return;
+    try{
+      const b=svg.getBBox();
+      if(!b||!b.width||!b.height)return;
+      const side=Math.max(b.width,b.height)*1.14;
+      svg.setAttribute('viewBox',(b.x+b.width/2-side/2)+' '+(b.y+b.height/2-side/2)+' '+side+' '+side);
+      svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+      svg.__opt=true;
+    }catch(e){}
+  });
+}
+function polish(root){hydrateIcons(root);requestAnimationFrame(()=>optCenter(root))}
+
+/* ==================== DATA ==================== */
+const MODES={
+ public:{hex:'#ffb020',icon:'crosshair',max:32,map:'de_mirage',desc:'Mirage, Dust FPS, Sandstone, Ancient и зимние версии карт. 128 tick, мгновенный респаун и скины.',art:'linear-gradient(150deg,#4a3413,#120c05 75%)'},
+ awp:{hex:'#38d9ff',icon:'scope',max:20,map:'awp_lego',desc:'Только AWP: Lego, Lego Snow и Cannons. Один выстрел — один фраг.',art:'linear-gradient(150deg,#0e3348,#060f1c 75%)'},
+ jail:{hex:'#ff4d6d',icon:'jail',max:32,map:'jail_tribute',desc:'Jail Break: Tribute, Spy vs Spy, Summer Jail и Moti. Мини-игры, бунты и побег.',art:'linear-gradient(150deg,#42141f,#120609 75%)'},
+ maniac:{hex:'#ff4dd8',icon:'skull',max:16,map:'seek_town',desc:'Maniac на Seek Town, Pool Home и HS Home. Один против всех, раунды по 90 секунд.',art:'linear-gradient(150deg,#3a1140,#10051a 75%)'},
+ fun:{hex:'#3ce081',icon:'spark',max:32,map:'de_mirage',desc:'Fun без рамок: Mirage, Mirage FPS, Dust Snow, Sandstone и зимние версии. Нож-раунды и хаос.',art:'linear-gradient(150deg,#0e3a26,#05130c 75%)'}
+};
+const RAW={
+ public:[
+  ['45.93.200.183:27015','MIRAGE #1','de_mirage','Москва',25,24],
+  ['45.93.200.183:27016','DUST FPS #2','de_dust_fps','Москва',17,28],
+  ['185.194.107.196:27315','DUST FPS #5','de_dust_fps','Москва',9,31],
+  ['92.63.189.130:27018','MIRAGE WINTER #6','de_mirage_winter','Москва',20,18],
+  ['92.63.189.130:27016','MIRAGE #8','de_mirage','Москва',12,20],
+  ['92.63.189.130:27024','MIRAGE WINTER #9','de_mirage_winter','Москва',9,22],
+  ['45.93.200.198:27016','MIRAGE #10','de_mirage','Москва',1,26],
+  ['185.194.107.196:27315','MIRAGE FPS #11','de_mirage_fps','Новосибирск',13,54],
+  ['92.63.189.130:27015','DUST SNOW #13','dust_snow','Москва',4,19],
+  ['45.93.200.238:27015','DUST2 #14','de_dust2','Санкт-Петербург',12,16],
+  ['185.194.107.201:27017','DUST FPS #15','de_dust_fps','Санкт-Петербург',6,21],
+  ['45.93.200.244:27016','SANDSTONE SNOW #16','sandstone_snow','Москва',7,25],
+  ['82.147.67.184:27016','SANDSTONE #22','sandstone','Москва',10,47],
+  ['45.93.200.86:27015','ANCIENT #24','de_ancient','Москва',1,23],
+  ['45.93.200.96:27016','SANDSTONE NEW #1','sandstone_new','Москва',16,22],
+  ['45.93.200.223:27015','SANDSTONE NEW #2','sandstone_new','Москва',13,20],
+  ['45.93.200.209:27015','SANDSTONE #3','sandstone','Санкт-Петербург',11,19],
+  ['45.93.200.254:27018','NUKE WINTER #25','de_nuke_chri','Москва',18,26]
+ ],
+ awp:[
+  ['45.93.200.96:27015','AWP LEGO #1','awp_lego','Москва',16,21],
+  ['92.255.63.83:27315','AWP LEGO #2','awp_lego','Москва',13,26],
+  ['45.93.200.244:27017','AWP LEGO #3','awp_lego','Санкт-Петербург',11,18],
+  ['92.63.189.130:27028','AWP LEGO #4','awp_lego','Москва',9,23],
+  ['87.228.59.101:27015','AWP LEGO #5','awp_lego','Москва',14,29],
+  ['45.95.31.170:27015','AWP LEGO SNOW #6','awp_lego_snow','Новосибирск',12,52],
+  ['185.194.107.194:28015','AWP CANNONS #7','awp_cannons','Москва',16,24]
+ ],
+ jail:[
+  ['92.63.189.130:27027','JAIL TRIBUTE #1','jail_tribute','Москва',12,20],
+  ['45.95.31.120:27015','JAIL SPY V SPY #2','jb_spy_v_spy','Москва',9,22],
+  ['45.95.31.120:27016','JAIL SUMMER #3','jb_summer_jail','Санкт-Петербург',7,17],
+  ['45.95.31.120:27017','JAIL MOTI #4','jb_moti_second','Москва',4,25]
+ ],
+ maniac:[
+  ['45.93.200.95:27015','MANIAC #1','seek_town','Москва',10,19],
+  ['185.194.107.201:27016','MANIAC #2','seek_town','Москва',8,24],
+  ['92.63.189.130:27020','MANIAC #3','seek_town_minecraft','Санкт-Петербург',7,16],
+  ['92.63.189.130:27029','MANIAC #4','pool_home','Москва',6,21],
+  ['92.63.189.130:27030','MANIAC #5','hs_home','Москва',7,23]
+ ],
+ fun:[
+  ['95.213.255.76:27115','FUN MIRAGE #1','de_mirage','Москва',25,22],
+  ['85.119.149.215:27915','FUN MIRAGE #2','de_mirage','Москва',25,25],
+  ['185.194.107.201:27015','FUN MIRAGE FPS #3','de_mirage_fps','Санкт-Петербург',22,18],
+  ['45.93.200.198:27017','FUN SANDSTONE NEW #4','sandstone_new','Москва',22,24],
+  ['62.182.159.104:27115','FUN DUST2 #5','de_dust2','Новосибирск',25,55],
+  ['45.93.200.209:27016','FUN MIRAGE WINTER #6','de_mirage_winter','Москва',28,21],
+  ['92.63.189.130:27025','FUN DUST SNOW #7','dust_snow','Москва',24,20],
+  ['45.93.200.164:27016','FUN MIRAGE #8','de_mirage','Санкт-Петербург',21,17],
+  ['185.137.235.124:27215','FUN MIRAGE #9','de_mirage','Москва',24,26],
+  ['45.95.31.168:27016','FUN MIRAGE FPS #10','de_mirage_fps','Москва',26,23],
+  ['92.63.189.130:27032','FUN DUST SNOW #11','dust_snow','Москва',22,19],
+  ['45.93.200.95:27017','FUN MIRAGE #12','de_mirage','Новосибирск',25,51],
+  ['92.63.189.130:27034','FUN MIRAGE WINTER #13','de_mirage_winter','Москва',23,22],
+  ['45.95.31.187:27015','FUN SANDSTONE #14','sandstone','Москва',27,20],
+  ['45.95.31.187:27016','FUN MIRAGE FPS #15','de_mirage_fps','Санкт-Петербург',24,16]
+ ]
+};
+const FRESH_MAPS=['sandstone','sandstone_new','sandstone_snow','de_nuke_chri','de_dust_fps','dust_snow'];
+const SERVERS=[];Object.keys(RAW).forEach(m=>RAW[m].forEach((r,i)=>SERVERS.push({sid:m+'-'+i,mode:m,ip:r[0],name:r[1],map:r[2],city:r[3],players:r[4],ping:r[5],max:MODES[m].max,fresh:FRESH_MAPS.includes(r[2])})));
+const bySid=Object.fromEntries(SERVERS.map(s=>[s.sid,s]));
+const NS=SERVERS.length;
+const MAPS_LIST=[...new Set(SERVERS.map(s=>s.map))].sort((a,b)=>a.localeCompare(b));
+const MAP_ALIAS={
+ de_mirage:['de_mirage','mirage'],
+ de_mirage_fps:['de_mirage_fps','mirage_fps'],
+ de_mirage_winter:['de_mirage_winter','mirage_winter'],
+ de_dust2:['de_dust2','dust2','dust_2'],
+ de_dust_fps:['de_dust_fps','dust_fps'],
+ de_ancient:['de_ancient','ancient'],
+ de_nuke_chri:['de_nuke_chri','de_nuke_christmas','de_nuke_winter','nuke_chri'],
+ dust_snow:['dust_snow','de_dust_snow','dust_winter'],
+ sandstone_snow:['sandstone_snow','sandstone_winter'],
+ awp_lego:['awp_lego','awp_lego_2','awp_lego_1'],
+ awp_lego_snow:['awp_lego_snow','awp_lego_winter'],
+ jail_tribute:['jail_tribute','jb_tribute']
+};
+const MAPART={
+ awp_cannons:['#6a5aa0','#141026'],awp_lego:['#2a6ab0','#081426'],awp_lego_snow:['#8fb6d6','#0e1a26'],
+ de_ancient:['#2a6a3a','#08160c'],de_dust2:['#b08a4a','#2c1e0a'],de_dust_fps:['#a07a3a','#241708'],
+ de_mirage:['#8a6a3a','#241708'],de_mirage_fps:['#5a4a9a','#150f33'],de_mirage_winter:['#5a8ab0','#0e1c2c'],de_nuke_chri:['#8fb6d6','#0e1a26'],
+ dust_snow:['#c0b090','#2a2418'],hs_home:['#7a5a4a','#1c1410'],jail_tribute:['#7a4a5a','#1c0e14'],
+ jb_moti_second:['#6a6a7a','#14141c'],jb_spy_v_spy:['#5a6a8a','#10141f'],jb_summer_jail:['#c0a050','#2a2010'],
+ pool_home:['#3a8ab0','#0a1c26'],sandstone:['#c2a06a','#2a1f0e'],sandstone_new:['#cbb27a','#2e2412'],sandstone_snow:['#d8d0c0','#2a2822'],
+ seek_town:['#8a7a5a','#1e1a10'],seek_town_minecraft:['#5a8a4a','#121e0e']
+};
+const mapBg=m=>{const c=MAPART[m]||['#3a3f5a','#0e1120'];return 'radial-gradient(120% 130% at 85% 0%,'+c[0]+'66,transparent 55%),linear-gradient(150deg,'+c[0]+'44,'+c[1]+' 78%)'};
+const MAP_IMG={},DONATE_IMG={};
+let ICON_URL=null;
+const mapUrl=m=>MAP_IMG[m]?("url('"+MAP_IMG[m]+"')"):mapBg(m);
+
+/* ==================== ASSETS ==================== */
+const EXT=['png','jpg','jpeg','webp','PNG','JPG','JPEG','WEBP','jfif','avif','gif'];
+const DIRS=['img/','images/',''];
+function resolveAsset(names,budget){
+  const bases=Array.isArray(names)?names:[names];
+  const list=[];DIRS.forEach(d=>bases.forEach(n=>EXT.forEach(x=>list.push(d+n+'.'+x))));
+  return new Promise(res=>{
+    let i=0,done=false;
+    const finish=v=>{if(done)return;done=true;clearTimeout(timer);res(v)};
+    const timer=setTimeout(()=>finish(null),budget||4000);
+    (function next(){
+      if(done)return;
+      if(i>=list.length){finish(null);return}
+      const url=list[i++],im=new Image();
+      im.onload=()=>finish(url);
+      im.onerror=next;
+      im.src=url;
+    })();
+  });
+}
+function patchMap(m){
+  const url=mapUrl(m);
+  document.querySelectorAll('[data-mapbg="'+m+'"]').forEach(el=>{el.style.backgroundImage=url});
+  if(MAP_IMG[m]){
+    document.querySelectorAll('img[data-mapimg="'+m+'"]').forEach(el=>{
+      if(el.getAttribute('src')!==MAP_IMG[m])el.setAttribute('src',MAP_IMG[m]);
+      el.style.display='block';
+    });
+  }
+  if($('#lightbox').classList.contains('open')&&MAPS_LIST[lbIndex]===m)renderLightbox();
+  if(ambientKey&&AMB[ambientKey]&&AMB[ambientKey].map===m)setAmbient(ambientKey);
+}
+
+/* ==================== STATIC CONTENT ==================== */
+const RULES=[['Читы и стороннее ПО','Любые читы, макросы и скрипты — перманентный бан без обжалования.'],['Оскорбления и токсичность','Уважайте игроков. Травля и разжигание конфликтов — мут от 1 часа до бана.'],['Реклама и спам','Реклама сторонних проектов в чате и голосе — бан на 7 дней.'],['Голосовой чат','Музыка, крики и посторонние звуки — мут. Микрофон по назначению.'],['Баги и эксплойты','Прострелы, застревания, эксплойты карт — бан 3 дня. О багах сообщайте поддержке.'],['Ник и аватар','Оскорбительные ники и реклама в профиле Steam — кик до смены.'],['AFK и слив','Намеренный AFK и помеха команде — кик, при повторе бан на сутки.'],['Решения администрации','Спорные ситуации решаются в поддержке, а не в чате сервера.']];
+const BANS=[['cheater_2007','Читы (WH/Aim)','ANTI-CHEAT','12.11.2026','PERM'],['toxic_kid','Оскорбления','admin·veil','15.11.2026','7 дней'],['spam_bot_x','Реклама в голосе','admin·krx','16.11.2026','3 дня'],['wallhack_ru','Эксплойт карты','admin·veil','17.11.2026','3 дня'],['afk_farmer','Фарм часов / AFK','SYSTEM','18.11.2026','24 часа'],['grief_master','Слив раундов','admin·krx','18.11.2026','48 часов']];
+const SKINS=[['AK-47','Asiimov','#ff4dd8','gun'],['AWP','Dragon Lore','#ffb020','scope'],['M4A4','Howl','#ff4d6d','gun'],['Karambit','Fade','#8b5cf6','knife'],['Desert Eagle','Blaze','#ff8a3d','gun'],['USP-S','Kill Confirmed','#38d9ff','gun']];
+const TIERS=[
+ {key:'dexer',name:'DEXER',color:'#c9d4ee',price:149,icon:'star',hot:false,features:['Резервный слот на всех серверах','Цветной ник и префикс DEXER','Скины оружия !ws и модельки','Без рекламы в чате']},
+ {key:'primer',name:'PRIMER',color:'#ffb020',price:299,icon:'crown',hot:true,features:['Всё из DEXER','Приоритетный слот при заполнении','Эксклюзивные ножи !knife','x2 опыта и ранний доступ к режимам','Перчатки !gloves']},
+ {key:'viper',name:'VIPER',color:'#38d9ff',price:549,icon:'bolt',hot:false,features:['Всё из PRIMER','Личный тег и место в топе сети','Кастомные модели и эффекты','Прямая линия с администрацией','Закрытые турниры и ивенты']}
+];
+const REGIONS=[['Москва','RU-MOW · 12 дата-центров',24],['Санкт-Петербург','RU-SPE · 6 дата-центров',18],['Новосибирск','RU-NVS · 4 дата-центра',52]];
+
+/* ==================== STATE ==================== */
+const store={
+  get(k,d){try{const v=localStorage.getItem(k);if(v!=null)return JSON.parse(v)}catch(e){}try{const v=sessionStorage.getItem(k);if(v!=null)return JSON.parse(v)}catch(e){}return d},
+  set(k,v){const s=JSON.stringify(v);try{localStorage.setItem(k,s)}catch(e){}try{sessionStorage.setItem(k,s)}catch(e){}},
+  del(k){try{localStorage.removeItem(k)}catch(e){}try{sessionStorage.removeItem(k)}catch(e){}}
+};
+function validProfile(p){return !!(p&&typeof p.steamid==='string'&&/^7656119\d{10}$/.test(p.steamid))}
+let favOrder=store.get('wt_fav_order',[]).filter(id=>bySid[id]);
+let favs=new Set(favOrder);
+let views=store.get('wt_views',[]).filter(v=>v&&(v.mode==='all'||MODES[v.mode]));
+let ui=Object.assign({density:'cozy',cols:'auto',ping:true,maplabel:true},store.get('wt_ui',{}));
+let profile=store.get('wt_profile',null);
+if(!validProfile(profile))profile=null;
+let last=store.get('wt_last',null);
+if(last&&!bySid[last.sid])last=null;
+let accent=store.get('wt_accent','blue'),soundOn=store.get('wt_sound',true),motionOn=store.get('wt_motion',true);
+let route='home',routeMode='public',fltActive=false,fltFav=false,sortMode='players',query='';
+let mapQuery='',mapSort='name',mapFreshOnly=false;
+let ambientKey=null,ambFlip=false,dragSid=null,lbIndex=0,authBusy=false;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const initials=n=>String(n||'?').trim().slice(0,2).toUpperCase();
+const modeTotal=m=>SERVERS.filter(s=>s.mode===m).reduce((a,s)=>a+s.players,0);
+const grandTotal=()=>SERVERS.reduce((a,s)=>a+s.players,0);
+const flag=()=>'<svg class="flag" viewBox="0 0 16 11"><rect width="16" height="3.7" fill="#fff"/><rect y="3.7" width="16" height="3.6" fill="#0039a6"/><rect y="7.3" width="16" height="3.7" fill="#d52b1e"/></svg>';
+const pingCls=p=>p<30?'good':p<50?'mid':'bad';
+const mapServers=m=>SERVERS.filter(s=>s.map===m);
+const modeMaps=m=>[...new Set(SERVERS.filter(s=>s.mode===m).map(s=>s.map))];
+function saveFavs(){favOrder=[...favs];store.set('wt_fav_order',favOrder)}
+function fetchTimeout(url,ms,opts){const c=new AbortController();const t=setTimeout(()=>c.abort(),ms||8000);return fetch(url,Object.assign({signal:c.signal},opts||{})).finally(()=>clearTimeout(t))}
+
+/* ==================== SOUND ==================== */
+let AC=null;
+function sfx(kind){
+  if(!soundOn)return;
+  try{
+    AC=AC||new (window.AudioContext||window.webkitAudioContext)();
+    if(AC.state==='suspended')AC.resume();
+    const t=AC.currentTime,f={move:[640,.045,.032],select:[880,.1,.05],back:[320,.09,.042],notify:[740,.14,.048]}[kind]||[640,.05,.03];
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.type='sine';o.frequency.value=f[0];o.connect(g);g.connect(AC.destination);
+    g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(f[2],t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+f[1]);
+    o.start(t);o.stop(t+f[1]+.03);
+    if(kind==='select'){const o2=AC.createOscillator(),g2=AC.createGain();o2.type='sine';o2.frequency.value=1320;o2.connect(g2);g2.connect(AC.destination);g2.gain.setValueAtTime(.0001,t+.06);g2.gain.exponentialRampToValueAtTime(.038,t+.08);g2.gain.exponentialRampToValueAtTime(.0001,t+.16);o2.start(t+.06);o2.stop(t+.2)}
+  }catch(e){}
+}
+
+/* ==================== TOASTS ==================== */
+function toast(msg,type,sub,action){
+  type=type||'success';
+  const col={success:'var(--green)',info:'var(--accent)',warn:'var(--amber)',error:'var(--red)'}[type];
+  const icn={success:'check',info:'info',warn:'warn',error:'x'}[type];
+  const el=document.createElement('div');
+  el.className='toast';el.style.setProperty('--tc',col);
+  el.innerHTML='<span class="t-ic">'+ic(icn)+'</span><span>'+esc(msg)+(sub?'<small>'+esc(sub)+'</small>':'')+'</span>'+(action?'<button class="t-act">'+esc(action.label)+'</button>':'');
+  const kill=()=>{clearTimeout(t);el.classList.add('out');setTimeout(()=>el.remove(),300)};
+  el.onclick=e=>{if(e.target.closest('.t-act')&&action){action.fn();kill()}else kill()};
+  $('#toasts').appendChild(el);
+  const t=setTimeout(kill,action?6000:4000);
+  polish(el);sfx('notify');
+}
+
+/* ==================== FOCUS ==================== */
+function scopeEl(){
+  if($('#lightbox').classList.contains('open'))return $('#lightbox');
+  if($('#modalOver').classList.contains('open'))return $('#modalBox');
+  if($('#searchOver').classList.contains('open'))return $('#searchOver');
+  if($('#chatPanel').classList.contains('open'))return $('#chatPanel');
+  if($('#guide').classList.contains('open'))return $('#guide');
+  return document.querySelector('.screen.on');
+}
+function setFocus(el,sound,scroll){
+  if(!el)return;
+  const sc=scopeEl();if(!sc||!sc.contains(el))return;
+  sc.querySelectorAll('.focused').forEach(x=>x.classList.remove('focused'));
+  el.classList.add('focused');
+  if(scroll!==false)el.scrollIntoView({block:'nearest',inline:'nearest',behavior:motionOn?'smooth':'auto'});
+  if(el.dataset.ambient)setAmbient(el.dataset.ambient);
+  if(sound)sfx('move');
+}
+function moveFocus(dx,dy){
+  const sc=scopeEl();if(!sc)return;
+  const list=[...sc.querySelectorAll('[data-foc]')].filter(el=>!el.disabled&&el.getClientRects().length);
+  if(!list.length)return;
+  const cur=sc.querySelector('.focused');
+  if(!cur){setFocus(list[0],true);return}
+  const r=cur.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  let best=null,bs=1e12;
+  list.forEach(el=>{
+    if(el===cur)return;
+    const b=el.getBoundingClientRect(),x=b.left+b.width/2,y=b.top+b.height/2,ddx=x-cx,ddy=y-cy;
+    if(dx&&Math.sign(ddx)!==dx)return;
+    if(dy&&Math.sign(ddy)!==dy)return;
+    if(dx&&Math.abs(ddx)<8)return;
+    if(dy&&Math.abs(ddy)<8)return;
+    const along=dx?Math.abs(ddx):Math.abs(ddy),cross=dx?Math.abs(ddy):Math.abs(ddx),s=along+cross*2.4;
+    if(s<bs){bs=s;best=el}
+  });
+  if(best)setFocus(best,true);
+}
+function activate(){const cur=scopeEl()&&scopeEl().querySelector('.focused');if(cur){sfx('select');flashHint('enter');cur.click()}}
+document.addEventListener('pointerover',e=>{const f=e.target.closest('[data-foc]');if(f)setFocus(f,false,false)});
+function flashHint(k){const el=document.querySelector('.hint[data-hk="'+k+'"]');if(!el)return;el.classList.add('flash');setTimeout(()=>el.classList.remove('flash'),200)}
+
+/* ==================== AMBIENT ==================== */
+const AMB={...Object.fromEntries(Object.keys(MODES).map(m=>[m,{hex:MODES[m].hex,art:MODES[m].art,map:MODES[m].map}])),
+ all:{hex:'#00a2ff',art:'linear-gradient(150deg,#0e2a4a,#060d1a 75%)',map:'de_mirage'},
+ maps:{hex:'#38d9ff',art:'linear-gradient(150deg,#0e2a3a,#060d16 75%)',map:'sandstone'},
+ shop:{hex:'#ffb020',art:'linear-gradient(150deg,#3a2a10,#0d0906 75%)',donate:'viper'},
+ skins:{hex:'#ff4dd8',art:'linear-gradient(150deg,#33103a,#10061a 75%)',map:'de_mirage_winter'},
+ bans:{hex:'#ff4d6d',art:'linear-gradient(150deg,#3a1220,#120609 75%)',map:'jb_summer_jail'},
+ rules:{hex:'#00a2ff',art:'linear-gradient(150deg,#101c33,#060a14 75%)',map:'de_nuke_chri'}};
+function fpConfig(key){
+  if(MODES[key]){const M=MODES[key],list=SERVERS.filter(s=>s.mode===key),n=list.length;
+    return{tag:'режим · counter-strike 2',title:key,desc:M.desc,
+      meta:[['users','<b data-fptotal="'+key+'">'+modeTotal(key)+'</b>&nbsp;онлайн'],['server','<b>'+n+'</b>&nbsp;серверов'],['layers','<b>'+modeMaps(key).length+'</b>&nbsp;карт'],['signal','<b>'+Math.round(list.reduce((a,s)=>a+s.ping,0)/n)+'</b>&nbsp;ms avg']],
+      btns:'<button class="btn-play-big" data-action="open-mode" data-mode="'+key+'" data-foc>'+ic('play')+'Играть</button><button class="btn-glass" data-action="all" data-foc>'+ic('grid')+'Все серверы</button>'}}
+  if(key==='all')return{tag:'библиотека · '+NS+' серверов',title:'все серверы',desc:'Полная библиотека сети WONTAKE: все режимы, карты и города. Фильтры, избранное и поиск.',
+    meta:[['users','<b>'+grandTotal()+'</b>&nbsp;онлайн'],['server','<b>'+NS+'</b>&nbsp;серверов'],['layers','<b>'+MAPS_LIST.length+'</b>&nbsp;карт']],
+    btns:'<button class="btn-play-big" data-action="all" data-foc>'+ic('grid')+'Открыть список</button>'};
+  if(key==='maps')return{tag:'библиотека · '+MAPS_LIST.length+' карт',title:'карты',desc:'Все карты сети с живыми скриншотами: Sandstone, Dust FPS, Ancient, Seek Town, Jail и зимние версии. Откройте карту крупно или найдите её серверы.',
+    meta:[['layers','<b>'+MAPS_LIST.length+'</b>&nbsp;карт'],['spark','<b>'+FRESH_MAPS.filter(m=>MAPS_LIST.includes(m)).length+'</b>&nbsp;новинки'],['server','<b>'+NS+'</b>&nbsp;серверов']],
+    btns:'<button class="btn-play-big" data-action="nav" data-screen="maps" data-foc>'+ic('layers')+'Открыть карты</button>'};
+  if(key==='shop')return{tag:'магазин · привилегии',title:'магазин',desc:'DEXER, PRIMER и VIPER — резервные слоты, скины, ножи, перчатки и турниры на всех серверах сети.',
+    meta:[['crown','<b>3</b>&nbsp;тарифа'],['bolt','<b>5 мин</b>&nbsp;активация'],['server','<b>'+NS+'</b>&nbsp;серверов']],
+    btns:'<button class="btn-play-big" data-action="nav" data-screen="shop" data-foc>'+ic('bag')+'В магазин</button>'};
+  if(key==='skins')return{tag:'скины · бесплатно',title:'скины',desc:'Оружие, ножи и перчатки доступны на всех серверах сети без оплаты — через игровые команды.',
+    meta:[['knife','<b>!ws</b>&nbsp;оружие'],['knife','<b>!knife</b>&nbsp;ножи'],['spark','<b>!gloves</b>&nbsp;перчатки']],
+    btns:'<button class="btn-play-big" data-action="nav" data-screen="skins" data-foc>'+ic('knife')+'Открыть скины</button>'};
+  if(key==='bans')return{tag:'модерация · прозрачно',title:'блокировки',desc:'Последние наказания сети с причиной, администратором и сроком. Ошибочный бан обжалуется в поддержке.',
+    meta:[['ban','<b>'+BANS.length+'</b>&nbsp;записей'],['info','<b>24 ч</b>&nbsp;обжалование']],
+    btns:'<button class="btn-play-big" data-action="nav" data-screen="bans" data-foc>'+ic('ban')+'Открыть список</button>'};
+  return{tag:'сеть · правила',title:'правила',desc:'Единые правила для всех режимов WONTAKE. Соблюдение правил — залог честной игры и комфортной атмосферы.',
+    meta:[['book','<b>'+RULES.length+'</b>&nbsp;пунктов'],['server','<b>'+NS+'</b>&nbsp;серверов']],
+    btns:'<button class="btn-play-big" data-action="nav" data-screen="rules" data-foc>'+ic('book')+'Читать правила</button>'};
+}
+function setAmbient(key){
+  if(!AMB[key])return;
+  ambientKey=key;
+  const cfg=AMB[key],fp=fpConfig(key);
+  document.body.style.setProperty('--tint',cfg.hex);
+  $('#fpTag').textContent=fp.tag;
+  const t=$('#fpTitle');t.textContent=fp.title;t.style.animation='none';void t.offsetWidth;t.style.animation='';
+  $('#fpDesc').textContent=fp.desc;
+  $('#fpMeta').innerHTML=fp.meta.map(m=>'<span class="fp-chip">'+ic(m[0])+m[1]+'</span>').join('');
+  $('#fpBtns').innerHTML=fp.btns;
+  const url=cfg.donate?DONATE_IMG[cfg.donate]:(cfg.map?MAP_IMG[cfg.map]:null);
+  const show=ambFlip?$('#ambA'):$('#ambB'),hide=ambFlip?$('#ambB'):$('#ambA');
+  show.style.backgroundImage=url?("url('"+url+"')"):cfg.art;
+  show.classList.add('show');hide.classList.remove('show');ambFlip=!ambFlip;
+  polish($('#fpMeta'));polish($('#fpBtns'));
+}
+
+/* ==================== HOME ==================== */
+function buildTiles(){
+  const tiles=Object.keys(MODES).map(m=>({key:m,amb:m,name:m,icon:MODES[m].icon,hex:MODES[m].hex,map:MODES[m].map,action:'open-mode',mode:m}));
+  tiles.push({key:'maps',amb:'maps',name:'карты',icon:'layers',hex:'#38d9ff',util:true,action:'nav',screen:'maps'});
+  tiles.push({key:'all',amb:'all',name:'все',icon:'grid',hex:'var(--accent)',util:true,action:'all'});
+  tiles.push({key:'shop',amb:'shop',name:'магазин',icon:'bag',hex:'#ffb020',util:true,action:'nav',screen:'shop'});
+  $('#tiles').innerHTML=tiles.map((t,i)=>{
+    const on=MODES[t.key]?'<span class="t-on"><i></i><span data-tileon="'+t.key+'">'+modeTotal(t.key)+'</span></span>':'';
+    const attrs=t.action==='open-mode'?'data-action="open-mode" data-mode="'+t.mode+'"':t.action==='nav'?'data-action="nav" data-screen="'+t.screen+'"':'data-action="'+t.action+'"';
+    return '<div class="tile'+(t.util?' util':'')+'" '+attrs+' data-foc data-ambient="'+t.amb+'" style="--tc:'+t.hex+';animation-delay:'+(i*55)+'ms" role="button" tabindex="0">'
+      +'<div class="t-fallback">'+ic(t.icon)+'</div>'
+      +(t.map?'<img alt="" data-mapimg="'+t.map+'"'+(MAP_IMG[t.map]?' src="'+MAP_IMG[t.map]+'"':' style="display:none"')+'>':'')
+      +'<div class="t-grad"></div><div class="t-sheen"></div>'+on+'<span class="t-name">'+t.name+'</span></div>';
+  }).join('');
+  polish($('#tiles'));
+}
+function buildActs(){
+  const cont=last&&bySid[last.sid]?bySid[last.sid]:SERVERS.slice().sort((a,b)=>b.players-a.players)[0];
+  const favList=favOrder.map(id=>bySid[id]).filter(Boolean);
+  const promo=DONATE_IMG.viper||DONATE_IMG.primer||DONATE_IMG.dexer;
+  $('#acts').innerHTML=
+   '<div class="act" data-action="all" data-foc><span class="a-label">'+ic('users')+'сеть онлайн</span><div class="a-big" id="actOnline">'+grandTotal()+'</div>'
+   +'<div class="netbars">'+Object.keys(MODES).map(m=>'<i style="--bc:'+MODES[m].hex+';height:8%" data-bar="'+m+'" title="'+m+'"></i>').join('')+'</div>'
+   +'<span class="a-sub">игроков на '+NS+' серверах</span></div>'
+   +'<div class="act continue" data-action="connect" data-sid="'+cont.sid+'" data-foc><div class="a-art" data-mapbg="'+cont.map+'" style="background-image:'+mapUrl(cont.map)+'"></div>'
+   +'<div class="a-in"><span class="a-label">'+ic('play')+(last?'продолжить':'рекомендуем')+'</span><b>'+esc(cont.name)+'</b><small>'+esc(cont.map)+' · '+cont.players+'/'+cont.max+'</small>'
+   +'<span class="a-play">'+ic('play')+'Подключиться</span></div></div>'
+   +'<div class="act promo" data-action="nav" data-screen="shop" data-foc><span class="p-tag">DONATE</span>'
+   +(promo?'<img src="'+promo+'" alt="Привилегии WONTAKE"><div class="p-shade"></div><div class="p-body"><b>Привилегии сети</b><span>DEXER · PRIMER · VIPER</span></div>'
+     :'<div class="p-fallback">'+ic('crown')+'<b>Привилегии сети</b><span>DEXER · PRIMER · VIPER</span></div>')+'</div>'
+   +'<div class="act favs" data-action="fav-view" data-foc><span class="a-star">'+ic('star')+'</span><span class="a-label">'+ic('bookmark')+'избранное</span>'
+   +'<div class="a-big">'+favList.length+'</div>'
+   +(favList.length?'<b>'+esc(favList[0].name)+'</b>':'')
+   +'<span class="a-sub">'+(favList.length?'серверов сохранено · открыть':'нажмите ★ на карточке сервера')+'</span></div>';
+  updateBars();polish($('#acts'));
+}
+function updateBars(){
+  const max=Math.max(...Object.keys(MODES).map(modeTotal),1);
+  Object.keys(MODES).forEach(m=>{const b=document.querySelector('[data-bar="'+m+'"]');if(b)b.style.height=Math.max(8,Math.round(modeTotal(m)/max*100))+'%'});
+}
+
+/* ==================== MAPS ==================== */
+function mapsFiltered(){
+  let l=MAPS_LIST.slice();
+  if(mapFreshOnly)l=l.filter(m=>FRESH_MAPS.includes(m));
+  if(mapQuery){const q=mapQuery.toLowerCase();l=l.filter(m=>m.includes(q))}
+  if(mapSort==='name')l.sort((a,b)=>a.localeCompare(b));
+  else if(mapSort==='players')l.sort((a,b)=>mapServers(b).reduce((x,s)=>x+s.players,0)-mapServers(a).reduce((x,s)=>x+s.players,0));
+  else l.sort((a,b)=>mapServers(b).length-mapServers(a).length);
+  return l;
+}
+function buildMaps(keepFocus){
+  const sc=scopeEl();
+  const prev=keepFocus&&sc&&sc.querySelector('.mtile.focused')?sc.querySelector('.mtile.focused').dataset.map:null;
+  const l=mapsFiltered();
+  $('#mapsSub').textContent=MAPS_LIST.length+' карт · '+NS+' серверов · '+FRESH_MAPS.filter(m=>MAPS_LIST.includes(m)).length+' новинки';
+  $('#mapCount').textContent=l.length;
+  $('#mapFresh').classList.toggle('on',mapFreshOnly);
+  $('#mapsGrid').innerHTML=l.length?l.map((m,i)=>{
+    const ss=mapServers(m),pl=ss.reduce((a,s)=>a+s.players,0),fresh=FRESH_MAPS.includes(m);
+    return '<div class="mtile" data-action="map-filter" data-map="'+m+'" data-foc style="animation-delay:'+Math.min(i*40,400)+'ms">'
+      +'<div class="m-bg" data-mapbg="'+m+'" style="background-image:'+mapUrl(m)+'"></div>'
+      +'<img alt="'+esc(m)+'" loading="lazy" data-mapimg="'+m+'"'+(MAP_IMG[m]?' src="'+MAP_IMG[m]+'"':' style="display:none"')+'>'
+      +'<div class="m-shade"></div>'
+      +(fresh?'<span class="m-new">NEW</span>':'')
+      +'<button class="sact m-expand" data-action="map-open" data-map="'+m+'" title="Открыть крупно">'+ic('expand')+'</button>'
+      +'<div class="m-body"><div class="m-name">'+esc(m)+'</div><div class="m-stats">'
+      +'<span class="m-chip">'+ic('server')+ss.length+' серв.</span>'
+      +'<span class="m-chip'+(pl?' on':'')+'">'+ic('users')+pl+' онлайн</span>'
+      +'</div></div></div>';
+  }).join(''):'<div class="empty" style="grid-column:1/-1">'+ic('search')+'<b>Карты не найдены</b><p>Измените запрос или отключите фильтр «новинки».</p><button class="btn-sec" data-action="map-reset" data-foc>Сбросить</button></div>';
+  polish($('#mapsGrid'));
+  if(prev){const el=$('#mapsGrid .mtile[data-map="'+prev+'"]');if(el)setFocus(el,false,false)}
+}
+function openLightbox(map){
+  const i=MAPS_LIST.indexOf(map);if(i<0)return;
+  lbIndex=i;renderLightbox();
+  $('#lightbox').classList.add('open');
+  const f=$('#lightbox .lb-next');if(f)setFocus(f,false,false);
+}
+function renderLightbox(){
+  const m=MAPS_LIST[lbIndex];if(!m)return;
+  const ss=mapServers(m),pl=ss.reduce((a,s)=>a+s.players,0),fresh=FRESH_MAPS.includes(m);
+  const img=$('#lbImg'),ph=$('#lbPh');
+  ph.style.backgroundImage=mapUrl(m);
+  $('#lbPhName').textContent=m;
+  if(MAP_IMG[m]){img.src=MAP_IMG[m];img.alt=m;img.style.display='block'}else{img.removeAttribute('src');img.style.display='none'}
+  $('#lbName').innerHTML=esc(m)+(fresh?'<span class="lb-new">NEW</span>':'');
+  $('#lbSub').textContent=ss.length+' серверов · '+pl+' игроков онлайн · '+ss.map(s=>s.mode).filter((v,i,a)=>a.indexOf(v)===i).join(', ');
+  $('#lbCount').textContent=(lbIndex+1)+' / '+MAPS_LIST.length;
+}
+function lbMove(d){lbIndex=(lbIndex+d+MAPS_LIST.length)%MAPS_LIST.length;renderLightbox();sfx('move')}
+function closeLightbox(){$('#lightbox').classList.remove('open')}
+
+/* ==================== SERVERS ==================== */
+const NAV=[['home','home','Главная'],['servers','grid','Серверы'],['maps','layers','Карты'],['shop','bag','Магазин'],['rules','book','Правила']];
+function buildNav(){$('#tabsnav').innerHTML=NAV.map(n=>'<button class="tnav" data-action="'+(n[0]==='home'?'home':n[0]==='servers'?'all':'nav')+'" data-screen="'+n[0]+'" data-nav="'+n[0]+'">'+ic(n[1])+n[2]+'</button>').join('');polish($('#tabsnav'))}
+function syncNav(){
+  const cur=route==='home'?'home':(route==='servers'||route==='all')?'servers':route;
+  document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('on',b.dataset.nav===cur));
+}
+function buildSvTabs(){$('#svTabs').innerHTML=Object.keys(MODES).map(m=>'<button class="svtab" data-action="open-mode" data-mode="'+m+'" data-foc style="--mc:'+MODES[m].hex+'">'+ic(MODES[m].icon)+m+' <span class="cnt" data-svtabon="'+m+'">'+modeTotal(m)+'</span></button>').join('');polish($('#svTabs'))}
+function filtered(mode){
+  let list=SERVERS.filter(s=>mode==='all'||s.mode===mode);
+  if(query){const q=query.toLowerCase();list=list.filter(s=>s.name.toLowerCase().includes(q)||s.map.includes(q)||s.ip.includes(q)||s.city.toLowerCase().includes(q))}
+  if(fltActive)list=list.filter(s=>s.players>0);
+  if(fltFav){list=list.filter(s=>favs.has(s.sid));list.sort((a,b)=>favOrder.indexOf(a.sid)-favOrder.indexOf(b.sid));return list}
+  const cmp={players:(a,b)=>b.players-a.players,free:(a,b)=>a.players/a.max-b.players/b.max,name:(a,b)=>a.name.localeCompare(b.name,'ru'),ping:(a,b)=>a.ping-b.ping}[sortMode];
+  return list.slice().sort(cmp);
+}
+function srvCard(s,i,showMode){
+  const M=MODES[s.mode],full=s.players>=s.max,zero=s.players===0,fav=favs.has(s.sid);
+  return '<article class="srv" '+(fltFav?'draggable="true" ':'')+'data-action="connect" data-sid="'+s.sid+'" data-foc style="--mc:'+M.hex+';animation-delay:'+Math.min(i*40,360)+'ms">'
+   +'<div class="s-bg" data-mapbg="'+esc(s.map)+'" style="background-image:'+mapUrl(s.map)+'"></div><div class="s-shade"></div>'
+   +'<div class="s-top"><div class="s-name">'+(showMode?'<span class="s-mode">'+s.mode+'</span>':'')+'<span class="nm" title="'+esc(s.name)+'">'+esc(s.name)+'</span>'+(s.fresh?'<span class="s-new">NEW</span>':'')+'</div>'
+   +'<div class="s-topright"><span class="s-map" title="'+esc(s.map)+'">'+esc(s.map)+'</span>'
+   +'<button class="sact'+(fav?' faved':'')+'" data-action="fav" data-sid="'+s.sid+'" title="Избранное">'+ic('star')+'</button>'
+   +'<button class="sact" data-action="copy" data-sid="'+s.sid+'" title="Копировать IP">'+ic('copy')+'</button></div></div>'
+   +'<div class="s-bot"><div class="s-loc">'+flag()+esc(s.city)+'<span class="ping '+pingCls(s.ping)+'">'+ic('signal')+s.ping+' ms</span></div>'
+   +'<div class="s-right"><div class="s-pl"><span class="pdot'+(zero?' zero':full?' full':'')+'"></span><span class="cur'+(zero?' zero':full?' full':'')+'" data-pnum="'+s.sid+'">'+s.players+'</span><small>/'+s.max+'</small></div>'
+   +'<span class="s-play'+(full?' off':'')+'" data-pgo="'+s.sid+'">'+(full?ic('lock'):ic('play'))+'</span></div></div>'
+   +'<div class="s-edge"><i class="'+(full?'full':'')+'" data-pbar="'+s.sid+'" style="width:'+Math.round(s.players/s.max*100)+'%"></i></div></article>';
+}
+const revealIO=('IntersectionObserver'in window)?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');revealIO.unobserve(en.target)}}),{threshold:.05}):null;
+function groupHtml(list,showMode){
+  const groups={};list.forEach(s=>{(groups[s.map]=groups[s.map]||[]).push(s)});
+  const keys=Object.keys(groups).sort((a,b)=>(FRESH_MAPS.includes(b)?1:0)-(FRESH_MAPS.includes(a)?1:0)||a.localeCompare(b));
+  let html='',i=0;
+  keys.forEach(map=>{
+    const g=groups[map],pl=g.reduce((a,s)=>a+s.players,0),cap=g.reduce((a,s)=>a+s.max,0),fresh=FRESH_MAPS.includes(map);
+    html+='<div class="mapgroup"><div class="mg-head"><span class="mg-thumb" data-action="map-open" data-map="'+esc(map)+'" data-mapbg="'+esc(map)+'" title="Открыть карту" style="background-image:'+mapUrl(map)+'"></span><div><div class="mg-name">'+esc(map)+(fresh?'<span class="mg-new">NEW</span>':'')+'</div><div class="mg-sub">'+g.length+' серв. · '+pl+' игроков</div></div><div class="mg-line"></div><div class="mg-share"><i style="width:'+Math.round(pl/cap*100)+'%"></i></div></div><div class="sgrid">'+g.map(s=>srvCard(s,i++,showMode)).join('')+'</div></div>';
+  });
+  return html;
+}
+function renderHero(){
+  const box=$('#svHero');
+  if(route==='all'){
+    box.innerHTML='<div class="modehero" style="--mc:var(--accent)"><div class="mh-bg" data-mapbg="de_mirage" style="background-image:'+mapUrl('de_mirage')+'"></div><div class="mh-shade"></div>'
+      +'<div class="mh-in"><span class="mh-ic">'+ic('grid')+'</span><div class="mh-txt"><b>все серверы</b><p>Полная библиотека сети: '+Object.keys(MODES).length+' режимов, '+MAPS_LIST.length+' карт, 3 города</p></div>'
+      +'<div class="mh-stats"><span class="mh-chip">'+ic('users')+'<b>'+grandTotal()+'</b>&nbsp;онлайн</span><span class="mh-chip">'+ic('server')+'<b>'+NS+'</b>&nbsp;серверов</span><span class="mh-chip">'+ic('bolt')+'<b>128</b>&nbsp;tick</span></div></div></div>';
+  }else{
+    const M=MODES[routeMode],list=SERVERS.filter(s=>s.mode===routeMode);
+    box.innerHTML='<div class="modehero" style="--mc:'+M.hex+'"><div class="mh-bg" data-mapbg="'+M.map+'" style="background-image:'+mapUrl(M.map)+'"></div><div class="mh-shade"></div>'
+      +'<div class="mh-in"><span class="mh-ic">'+ic(M.icon)+'</span><div class="mh-txt"><b>'+routeMode+'</b><p>'+esc(M.desc)+'</p></div>'
+      +'<div class="mh-stats"><span class="mh-chip">'+ic('users')+'<b data-herototal>'+modeTotal(routeMode)+'</b>&nbsp;онлайн</span><span class="mh-chip">'+ic('server')+'<b>'+list.length+'</b>&nbsp;серверов</span><span class="mh-chip">'+ic('layers')+'<b>'+modeMaps(routeMode).length+'</b>&nbsp;карт</span></div></div></div>';
+  }
+  polish(box);
+}
+function renderFresh(){
+  const box=$('#svFresh');
+  const pool=(route==='all'?SERVERS:SERVERS.filter(s=>s.mode===routeMode)).filter(s=>s.fresh);
+  const maps=[...new Set(pool.map(s=>s.map))].sort();
+  if(!maps.length||query||fltFav){box.innerHTML='';return}
+  box.innerHTML='<div class="freshstrip"><span class="fs-label">'+ic('spark')+'новые карты</span>'
+    +maps.map(m=>'<button class="fs-chip" data-action="map-filter" data-map="'+m+'" data-foc><span class="fs-th" data-mapbg="'+m+'" style="background-image:'+mapUrl(m)+'"></span>'+esc(m)+'<span class="fs-n">NEW</span></button>').join('')
+    +'</div>';
+  polish(box);
+}
+function renderServers(opts){
+  opts=opts||{};
+  const mode=route==='all'?'all':routeMode,M=MODES[routeMode],sc=scopeEl();
+  const prevSid=opts.keepFocus&&sc&&sc.querySelector('.srv.focused')?sc.querySelector('.srv.focused').dataset.sid:null;
+  $('#svTitle').innerHTML=(route==='all'?'<span class="h-ic" style="--mc:var(--accent)">'+ic('grid')+'</span>все серверы':'<span class="h-ic" style="--mc:'+M.hex+'">'+ic(M.icon)+'</span>'+routeMode);
+  const list=filtered(mode);
+  $('#svSub').textContent=list.length+' серверов · '+list.reduce((a,s)=>a+s.players,0)+' игроков онлайн'+(query?' · фильтр «'+query+'»':'');
+  document.querySelectorAll('.svtab').forEach(t=>t.classList.toggle('on',t.dataset.mode===routeMode&&route!=='all'));
+  document.body.classList.toggle('favview',fltFav);
+  renderHero();renderFresh();
+  const root=$('#svRoot');
+  if(!list.length){
+    root.innerHTML='<div class="empty">'+ic(fltFav?'star':'search')+'<b>Ничего не найдено</b><p>'+(fltFav&&!favs.size?'Отмечайте серверы звёздочкой — они появятся здесь, и их можно будет перетаскивать.':'Измените запрос или сбросьте фильтры.')+'</p><button class="btn-sec" data-action="reset-filters" data-foc>Сбросить фильтры</button></div>';
+  } else if(mode==='all'){
+    let html='';
+    Object.keys(MODES).forEach(m=>{
+      const sub=list.filter(s=>s.mode===m);if(!sub.length)return;
+      html+='<div class="modebanner" style="--mc:'+MODES[m].hex+'">'+ic(MODES[m].icon)+'<b>'+m+'</b><span>'+sub.length+' серв. · '+sub.reduce((a,s)=>a+s.players,0)+' онлайн</span><button class="btn-sec" data-action="open-mode" data-mode="'+m+'" data-foc>открыть</button></div>'+groupHtml(sub,true);
+    });
+    root.innerHTML=html;
+  } else root.innerHTML=groupHtml(list,false);
+  polish(root);
+  root.querySelectorAll('.mapgroup:not(.in)').forEach(el=>{if(opts.animate!==false&&revealIO)revealIO.observe(el);else el.classList.add('in')});
+  if(prevSid){const el=root.querySelector('.srv[data-sid="'+prevSid+'"]');if(el)setFocus(el,false,false)}
+  else if(!opts.keepFocus){const first=root.querySelector('[data-foc]');if(first)setFocus(first,false,false)}
+}
+
+/* ==================== SECTIONS ==================== */
+const rendered={};
+function renderSection(name){
+  if(rendered[name])return;rendered[name]=true;
+  if(name==='shop')$('#shopBody').innerHTML=TIERS.map(t=>{
+    const art=DONATE_IMG[t.key];
+    return '<div class="tier" style="--tc:'+t.color+'">'
+    +'<div class="t-art"'+(art?' style="background-image:url(\''+art+'\')"':'')+'>'+(art?'':'<span class="t-ic">'+ic(t.icon)+'</span>')
+    +(t.hot?'<span class="t-badge">выбор игроков</span>':'')+'<span class="t-name">'+t.name+'</span></div>'
+    +'<div class="t-body"><div class="t-price">'+t.price+' ₽<small> / мес</small></div>'
+    +'<ul>'+t.features.map(f=>'<li>'+ic('check')+f+'</li>').join('')+'</ul>'
+    +'<button class="t-buy" data-action="buy" data-tier="'+t.name+'" data-foc>'+ic('crown')+'Купить '+t.name+'</button></div></div>';
+  }).join('');
+  if(name==='rules')$('#rulesBody').innerHTML='<div class="rules">'+RULES.map((r,i)=>'<div class="rule"><span class="n">'+String(i+1).padStart(2,'0')+'</span><div><b>'+r[0]+'</b><p>'+r[1]+'</p></div></div>').join('')+'</div>';
+  if(name==='skins')$('#skinsBody').innerHTML='<div class="skins">'+SKINS.map(s=>'<div class="skin" style="--rc:'+s[2]+'"><div class="sk-art">'+ic(s[3])+'</div><div class="sk-body"><small>'+s[0]+'</small><b>'+s[1]+'</b><button class="sk-btn" data-action="try-skin" data-name="'+esc(s[0]+' | '+s[1])+'" data-foc>Как примерить</button></div></div>').join('')+'</div>';
+  if(name==='bans')renderBans('');
+  polish($('#scr-'+name));
+}
+function renderBans(q){
+  const list=BANS.filter(b=>b[0].toLowerCase().includes(q.toLowerCase()));
+  $('#banList').innerHTML=list.length?list.map(b=>'<div class="ban"><span class="b-ic">'+ic('ban')+'</span><div><b>'+esc(b[0])+'</b><small>'+esc(b[1])+' · '+esc(b[2])+' · '+b[3]+'</small></div><span class="b-term">'+b[4]+'</span></div>').join(''):'<div class="empty" style="padding:30px">'+ic('check')+'<b>Не найдено</b><p>Игрок с таким ником не заблокирован.</p></div>';
+  polish($('#banList'));
+}
+
+/* ==================== SAVED VIEWS ==================== */
+function renderViews(){
+  const box=$('#gViews');
+  if(!views.length){box.innerHTML='<div class="g-empty">Сохраняйте комбинации фильтров кнопкой «вид» в панели серверов — они появятся здесь.</div>';return}
+  box.innerHTML=views.map(v=>'<div class="g-view"><button class="v-apply" data-action="view-apply" data-id="'+v.id+'" data-foc>'+ic('bookmark')+'<span>'+esc(v.name)+'<small>'+(v.mode==='all'?'все':v.mode)+' · '+v.sort+(v.fav?' · избранное':'')+'</small></span></button><button class="sact" data-action="view-del" data-id="'+v.id+'" title="Удалить">'+ic('trash')+'</button></div>').join('');
+  polish(box);
+}
+function saveViewModal(){
+  openModal('<div class="mo-head"><span class="mo-ic">'+ic('bookmark')+'</span><div><b>Сохранить вид</b><small>Текущие фильтры, сортировка и режим</small></div><button class="mo-x" data-action="modal-close">'+ic('x')+'</button></div>'
+  +'<div class="mo-body"><div class="form"><label>Название<input id="viewName" type="text" maxlength="28" placeholder="Например: Sandstone · свободные"></label>'
+  +'<button class="btn-primary" data-action="view-save" data-foc>'+ic('bookmark')+'Сохранить</button></div></div>');
+  setTimeout(()=>{const n=$('#viewName');if(n)n.focus()},180);
+}
+function applyView(v){
+  query=v.query||'';sortMode=v.sort||'players';fltActive=!!v.active;fltFav=!!v.fav;
+  $('#srvSearch').value=query;$('#srvSort').value=sortMode;
+  $('#fltActive').classList.toggle('on',fltActive);$('#fltFav').classList.toggle('on',fltFav);
+  closeGuide();navigate(v.mode==='all'?'all':'servers/'+v.mode);
+  if((route==='servers'&&routeMode===v.mode)||(route==='all'&&v.mode==='all'))renderServers({animate:false});
+  toast('Вид применён','info',v.name);
+}
+
+/* ==================== STEAM AUTH ==================== */
+function siteBase(){
+  let path=location.pathname.replace(/index\.html?$/i,'');
+  if(!path.endsWith('/'))path=path.replace(/[^/]*$/,'');
+  return location.origin+path;
+}
+function startSteamLogin(){
+  if(location.protocol==='file:'){
+    openModal('<div class="mo-head"><span class="mo-ic" style="--mc:#66c0f4">'+ic('steam')+'</span><div><b>Вход через Steam</b><small>Нужен адрес http или https</small></div><button class="mo-x" data-action="modal-close">'+ic('x')+'</button></div>'
+    +'<div class="mo-body"><div class="steam-hero"><span class="st-ic">'+ic('steam')+'</span><p>Steam OpenID не принимает адреса вида <b>file://</b>. Откройте сайт по http (локальный сервер) или по https на хостинге — вход выполнится автоматически и профиль сохранится.</p></div>'
+    +'<div class="cn-btns" style="justify-content:center"><button class="btn-sec" data-action="modal-close" data-foc>Понятно</button></div></div>','#66c0f4');
+    return;
+  }
+  const base=siteBase(),returnTo=base+'?steam=return';
+  authStarted({ts:Date.now(),origin:location.origin,returnTo});
+  const p=new URLSearchParams({
+    'openid.ns':'http://specs.openid.net/auth/2.0','openid.mode':'checkid_setup',
+    'openid.return_to':returnTo,'openid.realm':base,
+    'openid.identity':'http://specs.openid.net/auth/2.0/identifier_select','openid.claimed_id':'http://specs.openid.net/auth/2.0/identifier_select'
+  });
+  toast('Переходим в Steam…','info','Подтвердите вход на steamcommunity.com');
+  setTimeout(()=>{location.assign('https://steamcommunity.com/openid/login?'+p.toString())},420);
+}
+function sidFromClaimed(v){const m=String(v||'').match(/(\d{17})\s*$/);return m&&/^7656119\d{10}$/.test(m[1])?m[1]:null}
+async function fetchSteamProfile(sid){
+  let nick=null,avatar=null;
+  try{
+    const r=await fetchTimeout('/api/steam-profile?steamid='+sid,7000);
+    if(r.ok){const j=await r.json();if(j&&j.nick)nick=j.nick;if(j&&j.avatar)avatar=j.avatar}
+  }catch(e){}
+  if(!avatar){
+    const sources=[
+      'https://api.allorigins.win/raw?url='+encodeURIComponent('https://steamcommunity.com/profiles/'+sid+'?xml=1'),
+      'https://corsproxy.io/?'+encodeURIComponent('https://steamcommunity.com/profiles/'+sid+'?xml=1')
+    ];
+    for(const url of sources){
+      try{
+        const txt=await (await fetchTimeout(url,7000)).text();
+        const n=txt.match(/<steamID>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/steamID>/);
+        const a=txt.match(/<avatarFull>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/avatarFull>/);
+        if(n&&n[1]&&n[1].trim())nick=n[1].trim();
+        if(a&&a[1]&&a[1].trim())avatar=a[1].trim();
+        if(nick||avatar)break;
+      }catch(e){}
+    }
+  }
+  return {nick,avatar};
+}
+function applySession(data){
+  profile={steamid:data.steamid,nick:data.nick||('Steam '+data.steamid.slice(-4)),avatar:data.avatar||null,verified:!!data.verified,ts:Date.now()};
+  store.set('wt_profile',profile);
+  authPendingClear();authStarted(null);cleanSteamUrl();
+  renderGuide();
+  toast('Вход через Steam выполнен','success',profile.nick+(profile.verified?' · подпись подтверждена':' · SteamID подтверждён Steam'));
+  if(!profile.verified)setTimeout(()=>toast('Подпись не проверена сервером','warn','Профиль создан по SteamID. Для полной проверки добавьте /api/steam-verify на хостинге.',{label:'Проверить',fn:startSteamLogin}),900);
+}
+async function handleSteamReturn(){
+  if(authBusy)return;
+  const p=AUTH.payload,started=authWasStarted();
+  if(!p){
+    if(started&&!validProfile(profile)){authStarted(null);toast('Steam вернул пустой ответ','warn','Хостинг мог обрезать параметры адреса.',{label:'Повторить',fn:startSteamLogin})}
+    return;
+  }
+  if(AUTH.cancelled||p['openid.mode']==='cancel'){
+    authPendingClear();authStarted(null);cleanSteamUrl();
+    toast('Вход через Steam отменён','warn',null,{label:'Повторить',fn:startSteamLogin});return;
+  }
+  const sid=sidFromClaimed(p['openid.claimed_id']||p['openid.identity']);
+  if(!sid){
+    if(started||AUTH.marker){authPendingClear();authStarted(null);cleanSteamUrl();toast('Steam не вернул SteamID','error','Параметры ответа потерялись при переходе.',{label:'Повторить',fn:startSteamLogin})}
+    return;
+  }
+  authBusy=true;renderGuide();
+  let data=null;
+  try{
+    const r=await fetchTimeout('/api/steam-verify',12000,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});
+    if(r.ok){const j=await r.json().catch(()=>null);if(j&&sidFromClaimed(j.steamid))data={steamid:j.steamid,nick:j.nick,avatar:j.avatar,verified:true}}
+  }catch(e){}
+  if(!data){const prof=await fetchSteamProfile(sid);data={steamid:sid,nick:prof.nick,avatar:prof.avatar,verified:false}}
+  authBusy=false;
+  applySession(data);
+}
+async function refreshSteamProfile(){
+  if(!validProfile(profile)){startSteamLogin();return}
+  toast('Обновляем профиль Steam…','info',profile.steamid);
+  const prof=await fetchSteamProfile(profile.steamid);
+  if(prof.nick)profile.nick=prof.nick;
+  if(prof.avatar)profile.avatar=prof.avatar;
+  store.set('wt_profile',profile);renderGuide();
+  toast('Профиль обновлён','success',profile.nick);
+}
+
+/* ==================== ROUTER ==================== */
+function navigate(h){location.hash=h}
+function applyRoute(){
+  const h=location.hash.replace('#',''),parts=h.split('/');
+  if(parts[0]==='servers'&&MODES[parts[1]]){route='servers';routeMode=parts[1]}
+  else if(h==='all')route='all';
+  else if(['shop','skins','bans','rules','maps'].includes(h))route=h;
+  else route='home';
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.body.classList.toggle('sub',route!=='home');
+  if(route==='home'){$('#scr-home').classList.add('on');setAmbient(ambientKey&&AMB[ambientKey]?ambientKey:'public');const f=$('#tiles .tile');if(f)setFocus(f,false,false)}
+  else if(route==='servers'||route==='all'){$('#scr-servers').classList.add('on');setAmbient(route==='all'?'all':routeMode);renderServers({animate:true})}
+  else if(route==='maps'){$('#scr-maps').classList.add('on');setAmbient('maps');buildMaps(false);const f=$('#mapsGrid [data-foc]');if(f)setFocus(f,false,false)}
+  else{$('#scr-'+route).classList.add('on');if(AMB[route])setAmbient(route);renderSection(route);const f=$('#scr-'+route+' [data-foc]');if(f)setFocus(f,false,false)}
+  syncNav();
+  const scr=$('#scr-'+(route==='servers'||route==='all'?'servers':route));if(scr)scr.scrollTop=0;
+  closeGuide();requestAnimationFrame(()=>optCenter());
+}
+window.addEventListener('hashchange',applyRoute);
+
+/* ==================== DIALOGS ==================== */
+function openModal(html,mc){const b=$('#modalBox');b.style.setProperty('--mc',mc||'var(--accent)');b.innerHTML=html;$('#modalOver').classList.add('open');polish(b);const f=b.querySelector('[data-foc]');if(f)setFocus(f,false,false)}
+function closeModal(){$('#modalOver').classList.remove('open')}
+function connectModal(sid){
+  const s=bySid[sid];if(!s)return;
+  const M=MODES[s.mode],fav=favs.has(sid);
+  openModal('<div class="mo-banner" data-action="map-open" data-map="'+esc(s.map)+'" data-mapbg="'+esc(s.map)+'" title="Открыть карту крупно" style="background-image:'+mapUrl(s.map)+'"></div>'
+  +'<div class="mo-head"><span class="mo-ic">'+ic(M.icon)+'</span><div><b>'+esc(s.name)+'</b><small>'+esc(s.map)+' · '+esc(s.city)+'</small></div><button class="mo-x" data-action="modal-close">'+ic('x')+'</button></div>'
+  +'<div class="mo-body"><div class="cn-meta"><span class="cn-chip">'+ic('users')+s.players+' / '+s.max+'</span><span class="cn-chip">'+ic('signal')+s.ping+' ms</span><span class="cn-chip">'+ic('bolt')+'128 tick</span>'+(s.fresh?'<span class="cn-chip" style="color:var(--sand)">'+ic('spark')+'новая карта</span>':'')+'</div>'
+  +'<div class="cn-ip"><code>'+esc(s.ip)+'</code><button class="sact" data-action="copy-ip" data-ip="'+esc(s.ip)+'">'+ic('copy')+'</button></div>'
+  +'<div class="cn-steps"><div class="cn-step"><span class="n">1</span><span>«Открыть в Steam» — игра запустится и подключится сама.</span></div>'
+  +'<div class="cn-step"><span class="n">2</span><span>Или консоль <code>~</code> в CS2 и команда <code>connect '+esc(s.ip)+'</code></span></div></div>'
+  +'<div class="cn-btns"><button class="btn-primary" data-action="steam-connect" data-sid="'+s.sid+'" data-foc>'+ic('play')+'Открыть в Steam</button>'
+  +'<button class="btn-sec" data-action="copy-cmd" data-ip="'+esc(s.ip)+'" data-foc>'+ic('terminal')+'Скопировать connect</button>'
+  +'<button class="btn-sec'+(fav?' faved':'')+'" data-action="fav-modal" data-sid="'+s.sid+'" data-foc>'+ic('star')+(fav?'В избранном':'В избранное')+'</button></div></div>',M.hex);
+}
+function netModal(){
+  openModal('<div class="mo-head"><span class="mo-ic">'+ic('wifi')+'</span><div><b>Состояние сети</b><small>Дата-центры WONTAKE и задержка</small></div><button class="mo-x" data-action="modal-close">'+ic('x')+'</button></div>'
+  +'<div class="mo-body">'+REGIONS.map(r=>'<div class="netrow"><span class="n-ic">'+ic('globe')+'</span><div><b>'+r[0]+'</b><small>'+r[1]+'</small></div><div class="n-val"><b>'+r[2]+' ms</b><small>потери 0.0%</small><div class="n-bar"><i style="width:'+Math.max(12,100-r[2])+'%"></i></div></div></div>').join('')
+  +'<div class="cn-btns" style="margin-top:16px"><button class="btn-sec" data-action="modal-close" data-foc>Закрыть</button></div></div>');
+}
+function infoDialog(doc){
+  const priv=doc==='privacy';
+  const rows=priv?[['Данные','SteamID, ник и аватар из публичного профиля Steam. Платёжные данные не хранятся на сайте.'],['Вход','Авторизация через официальный Steam OpenID (steamcommunity.com).'],['Локально','Сессия, избранное, виды и настройки хранятся в вашем браузере.'],['Удаление','Выйдите из профиля или сбросьте настройки в меню — данные удалятся с устройства.']]:[['Предмет','Доступ к серверам и цифровым привилегиям DEXER/PRIMER/VIPER на условиях предоплаты.'],['Срок','Активация за 5 минут, действие 30 дней на всех серверах сети.'],['Возврат','В течение 24 часов, если привилегия не активирована по технической причине.'],['Нарушения','При перманентном бане за читы стоимость привилегий не возвращается.']];
+  openModal('<div class="mo-head"><span class="mo-ic">'+ic(priv?'book':'info')+'</span><div><b>'+(priv?'Политика конфиденциальности':'Договор оферты')+'</b><small>WONTAKE · редакция 01.01.2026</small></div><button class="mo-x" data-action="modal-close">'+ic('x')+'</button></div>'
+  +'<div class="mo-body"><div class="rules">'+rows.map((r,i)=>'<div class="rule"><span class="n">'+String(i+1).padStart(2,'0')+'</span><div><b>'+r[0]+'</b><p>'+r[1]+'</p></div></div>').join('')+'</div></div>');
+}
+
+/* ==================== SEARCH ==================== */
+function openSearch(){$('#searchOver').classList.add('open');$('#globalSearch').value='';renderSearch('');setTimeout(()=>$('#globalSearch').focus(),120)}
+function closeSearch(){$('#searchOver').classList.remove('open')}
+function renderSearch(q){
+  const box=$('#searchResults');
+  if(!q.trim()){box.innerHTML='<div class="sb-hint">Поиск по '+NS+' серверам и '+MAPS_LIST.length+' картам.<div class="keys"><span>sandstone</span><span>seek_town</span><span>de_ancient</span><span>45.93.200</span></div></div>';return}
+  const ql=q.toLowerCase();
+  const maps=MAPS_LIST.filter(m=>m.includes(ql)).slice(0,4);
+  const res=SERVERS.filter(s=>s.name.toLowerCase().includes(ql)||s.map.includes(ql)||s.ip.includes(ql)||s.city.toLowerCase().includes(ql)||s.mode.includes(ql)).slice(0,10);
+  if(!maps.length&&!res.length){box.innerHTML='<div class="sb-hint">Ничего не найдено по «'+esc(q)+'»</div>';return}
+  let html='';
+  if(maps.length)html+='<div class="sb-sec">Карты</div>'+maps.map(m=>{const ss=mapServers(m);return '<div class="sres" data-action="map-open" data-map="'+m+'" data-foc style="--mc:var(--cyan)"><span class="sr-ic" data-mapbg="'+m+'" style="background-image:'+mapUrl(m)+'"><img alt="" data-mapimg="'+m+'"'+(MAP_IMG[m]?' src="'+MAP_IMG[m]+'"':' style="display:none"')+'></span><div class="sr-tx"><b>'+esc(m)+(FRESH_MAPS.includes(m)?' · NEW':'')+'</b><small>'+ss.length+' серверов · '+ss.reduce((a,s)=>a+s.players,0)+' онлайн</small></div><span class="sr-right"><span class="sr-mode">карта</span></span></div>'}).join('');
+  if(res.length)html+='<div class="sb-sec">Серверы</div>'+res.map(s=>'<div class="sres" data-action="search-pick" data-sid="'+s.sid+'" data-foc style="--mc:'+MODES[s.mode].hex+'"><span class="sr-ic" data-mapbg="'+esc(s.map)+'" style="background-image:'+mapUrl(s.map)+'"><img alt="" data-mapimg="'+esc(s.map)+'"'+(MAP_IMG[s.map]?' src="'+MAP_IMG[s.map]+'"':' style="display:none"')+'></span><div class="sr-tx"><b>'+esc(s.name)+'</b><small>'+esc(s.map)+' · '+esc(s.ip)+'</small></div><span class="sr-right"><span class="sr-pl">'+s.players+'/'+s.max+'</span><span class="sr-mode">'+s.mode+'</span></span></div>').join('');
+  box.innerHTML=html;polish(box);
+  const f=box.querySelector('[data-foc]');if(f)setFocus(f,false,false);
+}
+function searchMove(d){
+  const items=[...document.querySelectorAll('.sres')];if(!items.length)return;
+  let i=items.findIndex(x=>x.classList.contains('focused'));
+  i=Math.max(0,Math.min(items.length-1,(i<0?0:i+d)));
+  setFocus(items[i],true);
+}
+
+/* ==================== MENU / SESSION ==================== */
+function openGuide(){closeModal();closeSearch();closeChat();closeLightbox();$('#guide').classList.add('open');$('#guideScrim').classList.add('open');renderViews();const f=$('#guide [data-foc]');if(f)setFocus(f,false,false)}
+function closeGuide(){$('#guide').classList.remove('open');$('#guideScrim').classList.remove('open')}
+function avatarMarkup(cls){
+  const ghost=ICON_URL?'<img src="'+ICON_URL+'" alt="" onerror="this.style.display=\'none\'">':ic('ghost');
+  if(!validProfile(profile))return ghost;
+  return '<span class="'+cls+'">'+esc(initials(profile.nick))+'</span>'
+    +(profile.avatar?'<img src="'+profile.avatar+'" alt="" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'');
+}
+function renderGuide(){
+  const box=$('#gProfile'),av=$('#avatarBtn'),extra=$('#gAuthExtra');
+  const authed=validProfile(profile);
+  box.classList.toggle('authed',authed);
+  av.classList.toggle('authed',authed);
+  av.innerHTML=avatarMarkup('av-in')+(authed?'<span class="av-dot"></span>':'');
+  av.title=authed?('Профиль · '+profile.nick):'Профиль · гость';
+  if(authed){
+    box.innerHTML='<span class="av">'+avatarMarkup('av-in')+'</span>'
+      +'<div class="g-txt"><b>'+esc(profile.nick)+'</b><small><span class="sd'+(profile.verified?'':' warn')+'"></span>'+(profile.verified?'STEAM · ПОДТВЕРЖДЕНО':'STEAM · ID ПОЛУЧЕН')+'</small></div>'
+      +'<span class="g-pacts">'
+      +'<button class="sact" data-action="steam-refresh" title="Обновить профиль">'+ic('refresh')+'</button>'
+      +'<a class="sact" href="https://steamcommunity.com/profiles/'+profile.steamid+'" target="_blank" rel="noopener" title="Профиль Steam">'+ic('external')+'</a>'
+      +'<button class="sact" data-action="logout" title="Выйти">'+ic('logout')+'</button></span>';
+    $('#gSteamId').innerHTML='<span>'+profile.steamid+'</span><button data-action="copy-steamid" title="Копировать SteamID">'+ic('copy')+'</button>';
+    extra.innerHTML=profile.verified?'':'<button class="g-item" data-action="steam-open" data-foc style="color:var(--amber)">'+ic('shield')+'Подтвердить вход через Steam</button>';
+  }else{
+    const ghost=ICON_URL?'<img src="'+ICON_URL+'" alt="" onerror="this.style.display=\'none\'">':ic('ghost');
+    box.innerHTML='<span class="av">'+ghost+'</span><div class="g-txt"><b>Гость</b><small style="color:var(--muted)"><span class="sd warn"></span>ВХОД НЕ ВЫПОЛНЕН</small></div>'
+      +'<span class="g-pacts"><button class="btn-sec" data-action="steam-open" style="padding:9px 14px">'+ic('steam')+'Войти</button></span>';
+    $('#gSteamId').innerHTML='<span>Официальный Steam OpenID · без пароля</span>';
+    extra.innerHTML=authBusy?'<div class="auth-progress"><span class="spin"></span><div><b>Завершаем вход…</b><small>Проверяем ответ Steam</small></div></div>':'';
+  }
+  $('#chatAv').innerHTML=authed&&profile.avatar?'<img src="'+profile.avatar+'" alt="" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'WT';
+  document.querySelectorAll('#gAccent button').forEach(b=>b.classList.toggle('on',b.dataset.accent===accent));
+  $('#tgSound').classList.toggle('on',soundOn);
+  $('#tgMotion').classList.toggle('on',motionOn);
+  const sb=$('#sndBtn');
+  sb.innerHTML=ic(soundOn?'vol':'volx');
+  sb.classList.toggle('muted',!soundOn);
+  sb.title=soundOn?'Звук включён — выключить':'Звук выключен — включить';
+  polish($('#guide'));polish($('.tb-right'));
+}
+function applyUI(){
+  document.body.dataset.density=ui.density;document.body.dataset.cols=ui.cols;
+  document.body.classList.toggle('hide-ping',!ui.ping);document.body.classList.toggle('hide-map',!ui.maplabel);
+  $('#tgDensity').classList.toggle('on',ui.density==='compact');
+  $('#tgPing').classList.toggle('on',ui.ping);
+  $('#tgMap').classList.toggle('on',ui.maplabel);
+  $('#srvCols').value=ui.cols;store.set('wt_ui',ui);
+}
+function applySettings(){
+  document.body.dataset.accent=accent;
+  document.body.classList.toggle('no-motion',!motionOn);
+  store.set('wt_accent',accent);store.set('wt_sound',soundOn);store.set('wt_motion',motionOn);
+  renderHints();renderGuide();applyUI();
+}
+function renderHints(){
+  $('#hints').innerHTML='<span class="hint" data-hk="enter"><i class="kb">Enter</i>Выбрать</span><span class="hint" data-hk="esc"><i class="kb">Esc</i>Назад</span><span class="hint" data-hk="slash"><i class="kb">/</i>Поиск</span><span class="hint" data-hk="g"><i class="kb">G</i>Меню</span>';
+}
+function applyBrand(){
+  const mark=ICON_URL?'<img src="'+ICON_URL+'" alt="WONTAKE">':ic('ghost');
+  $('#brandMark').innerHTML=mark;$('#guideMark').innerHTML=mark;$('#bootMark').innerHTML=mark;
+  if(ICON_URL)$('#fav').href=ICON_URL;
+  polish($('.topbar'));
+}
+
+/* ==================== CHAT ==================== */
+let chatStarted=false;
+function addMsg(html,who){const el=document.createElement('div');el.className='msg '+who;el.innerHTML=html;$('#chatMsgs').appendChild(el);$('#chatMsgs').scrollTop=$('#chatMsgs').scrollHeight}
+function botReply(q){
+  const ty=document.createElement('div');ty.className='typing';ty.innerHTML='<i></i><i></i><i></i>';$('#chatMsgs').appendChild(ty);$('#chatMsgs').scrollTop=$('#chatMsgs').scrollHeight;
+  const ql=q.toLowerCase();let a;
+  if(/подключ|connect|зайти|играть/.test(ql))a='Откройте консоль клавишей <code>~</code> и введите <code>connect IP:PORT</code>. IP указан на карточке сервера. Либо нажмите Play — Steam запустится и подключится сам.';
+  else if(/бан/.test(ql))a='Причина и срок наказания видны в разделе «Блокировки». Если бан выдан ошибочно — напишите ваш SteamID и ник, администратор проверит демо в течение суток.';
+  else if(/dexer|primer|viper|vip|донат|куп|магазин|привилег/.test(ql))a='В магазине три привилегии: DEXER — 149 ₽, PRIMER — 299 ₽, VIPER — 549 ₽ в месяц. Выдаются автоматически за 5 минут на все '+NS+' серверов. Статус в игре — команда <code>!vip</code>.';
+  else if(/вход|гость|steam|войти|профил|автор/.test(ql))a='Вход идёт через официальный Steam OpenID. Нажмите «Войти» в меню, подтвердите на steamcommunity.com — вернётесь уже с ником и аватаром. Если после возврата снова «Гость», нажмите «Войти» ещё раз: сайт мог быть открыт по адресу file:// или хостинг обрезал параметры.';
+  else if(/скин|ws|нож|перчат/.test(ql))a='На всех серверах работают <code>!ws</code> (скины оружия), <code>!knife</code> (ножи) и <code>!gloves</code> (перчатки). Бесплатно.';
+  else if(/sandstone|seek|jail|dust|nuke|ancient|lego|нов|карт/.test(ql))a='Актуальные карты: Mirage и Mirage FPS, Dust FPS и Dust Snow, Sandstone / New / Snow, Ancient, зимний Nuke, AWP Lego (одна карта на все Lego-серверы), Lego Snow и Cannons, Seek Town и Minecraft-версия, Pool Home, HS Home, Jail Tribute, Spy vs Spy, Summer Jail и Moti. Все они — в разделе «Карты».';
+  else if(/пинг|лаг|тормоз/.test(ql))a='Выбирайте сервер в своём городе и FPS-версии карт — задержка указана на каждой карточке. Москва, Санкт-Петербург и Новосибирск.';
+  else a='Принял! Передаю вопрос администратору — ответим здесь в течение пары минут. Могу помочь с подключением, входом, баном, привилегиями или скинами.';
+  setTimeout(()=>{ty.remove();addMsg(a,'bot')},motionOn?800+Math.random()*500:100);
+}
+function sendChat(t){if(!t.trim())return;addMsg(esc(t),'me');$('#chatInput').value='';botReply(t)}
+function openChat(){$('#chatPanel').classList.add('open');if(!chatStarted){chatStarted=true;addMsg('Здравствуйте! Помогу с подключением, входом через Steam, баном, привилегиями и скинами. Напишите вопрос.','bot')}setTimeout(()=>$('#chatInput').focus(),250)}
+function closeChat(){$('#chatPanel').classList.remove('open')}
+
+/* ==================== LIVE ==================== */
+function refreshLive(changed){
+  $('#chipOnline').textContent=grandTotal();
+  const ao=$('#actOnline');if(ao)ao.textContent=grandTotal();
+  document.querySelectorAll('[data-tileon]').forEach(el=>el.textContent=modeTotal(el.dataset.tileon));
+  document.querySelectorAll('[data-svtabon]').forEach(el=>el.textContent=modeTotal(el.dataset.svtabon));
+  document.querySelectorAll('[data-fptotal]').forEach(el=>el.textContent=modeTotal(el.dataset.fptotal));
+  const ht=document.querySelector('[data-herototal]');if(ht&&route==='servers')ht.textContent=modeTotal(routeMode);
+  updateBars();
+  (changed||[]).forEach(sid=>{
+    const s=bySid[sid],full=s.players>=s.max,zero=s.players===0;
+    const num=document.querySelector('[data-pnum="'+sid+'"]');
+    if(num){num.textContent=s.players;num.className='cur'+(zero?' zero':full?' full':'');
+      const card=num.closest('.srv');
+      if(card){const dot=card.querySelector('.pdot');if(dot)dot.className='pdot'+(zero?' zero':full?' full':'')}
+      const bar=document.querySelector('[data-pbar="'+sid+'"]');if(bar){bar.style.width=Math.round(s.players/s.max*100)+'%';bar.classList.toggle('full',full)}
+      const go=document.querySelector('[data-pgo="'+sid+'"]');if(go){go.className='s-play'+(full?' off':'');go.innerHTML=full?ic('lock'):ic('play');optCenter(go)}}
+  });
+  const d=new Date();$('#liveTime').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+}
+setInterval(()=>{
+  if(document.hidden)return;
+  const ch=[];
+  for(let i=0;i<4;i++){const s=SERVERS[Math.floor(Math.random()*SERVERS.length)];const n=Math.max(0,Math.min(s.max,s.players+Math.floor(Math.random()*3)-1));if(n!==s.players){s.players=n;ch.push(s.sid)}}
+  if(ch.length)refreshLive(ch);
+},6000);
+function tickClock(){
+  const d=new Date();
+  $('#clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  $('#dateStr').textContent=d.toLocaleDateString('ru-RU',{weekday:'short',day:'numeric',month:'short'});
+}
+setInterval(tickClock,1000);tickClock();
+function countUp(el,to,dur){
+  if(!motionOn){el.textContent=to;return}
+  const t0=performance.now();
+  (function step(t){const p=Math.min((t-t0)/dur,1);el.textContent=Math.round(to*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(step)})(t0);
+}
+
+/* ==================== HELPERS ==================== */
+function copyText(t,msg,sub){
+  const ok=()=>toast(msg,'success',sub);
+  const fb=()=>{const ta=document.createElement('textarea');ta.value=t;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Не удалось скопировать','error')}ta.remove()};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok).catch(fb);else fb();
+}
+function toggleFav(sid,fromModal){
+  const s=bySid[sid];if(!s)return;
+  if(favs.has(sid)){
+    favs.delete(sid);saveFavs();
+    toast('Убрано из избранного','info',s.name,{label:'Вернуть',fn:()=>{favs.add(sid);saveFavs();buildActs();if(route==='servers'||route==='all')renderServers({keepFocus:true,animate:false});if(fromModal)connectModal(sid)}});
+  }else{favs.add(sid);saveFavs();toast('Добавлено в избранное','success',s.name)}
+  document.querySelectorAll('.sact[data-action="fav"][data-sid="'+sid+'"]').forEach(b=>b.classList.toggle('faved',favs.has(sid)));
+  buildActs();
+  if(fromModal)connectModal(sid);
+  if(fltFav&&(route==='servers'||route==='all'))renderServers({keepFocus:true,animate:false});
+}
+function filterByMap(m){
+  query=m;$('#srvSearch').value=m;closeLightbox();closeSearch();
+  navigate('all');
+  if(route==='all')renderServers({animate:false});
+  toast('Фильтр по карте','info',m);
+}
+
+/* ==================== EVENTS ==================== */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-action]');if(!t)return;
+  const a=t.dataset.action;
+  if(a==='home')navigate('');
+  else if(a==='open-mode'){sfx('select');navigate('servers/'+t.dataset.mode)}
+  else if(a==='all')navigate('all');
+  else if(a==='nav'){closeGuide();navigate(t.dataset.screen)}
+  else if(a==='connect')connectModal(t.dataset.sid);
+  else if(a==='copy'){e.stopPropagation();const s=bySid[t.dataset.sid];if(!s)return;copyText(s.ip,'IP скопирован',s.ip);t.classList.add('ok');t.innerHTML=ic('check');optCenter(t);setTimeout(()=>{t.classList.remove('ok');t.innerHTML=ic('copy');optCenter(t)},1400)}
+  else if(a==='fav'){e.stopPropagation();toggleFav(t.dataset.sid,false)}
+  else if(a==='fav-modal'){e.stopPropagation();toggleFav(t.dataset.sid,true)}
+  else if(a==='steam-connect'){const s=bySid[t.dataset.sid];if(!s)return;last={sid:s.sid,ts:Date.now()};store.set('wt_last',last);buildActs();try{window.location.href='steam://connect/'+s.ip}catch(err){}toast('Запускаем Steam…','info','Если игра не открылась — скопируйте connect-команду')}
+  else if(a==='copy-cmd')copyText('connect '+t.dataset.ip,'Команда скопирована','connect '+t.dataset.ip);
+  else if(a==='copy-ip')copyText(t.dataset.ip,'IP скопирован',t.dataset.ip);
+  else if(a==='copy-steamid'&&validProfile(profile))copyText(profile.steamid,'SteamID скопирован',profile.steamid);
+  else if(a==='modal-close')closeModal();
+  else if(a==='net')netModal();
+  else if(a==='buy'){openChat();sendChat('Хочу купить '+t.dataset.tier)}
+  else if(a==='try-skin')toast(t.dataset.name,'info','Введите !ws на сервере и выберите скин в меню');
+  else if(a==='search-pick'){closeSearch();connectModal(t.dataset.sid)}
+  else if(a==='map-open'){e.stopPropagation();openLightbox(t.dataset.map)}
+  else if(a==='map-filter'){e.stopPropagation();filterByMap(t.dataset.map)}
+  else if(a==='map-fresh'){mapFreshOnly=!mapFreshOnly;buildMaps(false);sfx('move');const f=$('#mapsGrid [data-foc]');if(f)setFocus(f,false,false)}
+  else if(a==='map-reset'){mapFreshOnly=false;mapQuery='';$('#mapSearch').value='';buildMaps(false)}
+  else if(a==='lb-close')closeLightbox();
+  else if(a==='lb-prev')lbMove(-1);
+  else if(a==='lb-next')lbMove(1);
+  else if(a==='lb-copy')copyText(MAPS_LIST[lbIndex],'Имя карты скопировано',MAPS_LIST[lbIndex]);
+  else if(a==='lb-servers')filterByMap(MAPS_LIST[lbIndex]);
+  else if(a==='steam-open')startSteamLogin();
+  else if(a==='steam-refresh')refreshSteamProfile();
+  else if(a==='logout'){profile=null;store.del('wt_profile');authPendingClear();authStarted(null);renderGuide();toast('Вы вышли из профиля','info',null,{label:'Войти снова',fn:startSteamLogin})}
+  else if(a==='fav-view'){closeGuide();fltFav=true;$('#fltFav').classList.add('on');navigate('all');if(route==='all')renderServers({animate:false})}
+  else if(a==='flt-active'){fltActive=!fltActive;t.classList.toggle('on',fltActive);renderServers({keepFocus:true,animate:false})}
+  else if(a==='flt-fav'){fltFav=!fltFav;t.classList.toggle('on',fltFav);renderServers({keepFocus:true,animate:false})}
+  else if(a==='tg-density'){ui.density=ui.density==='compact'?'cozy':'compact';applyUI();sfx('move')}
+  else if(a==='tg-ping'){ui.ping=!ui.ping;applyUI();sfx('move')}
+  else if(a==='tg-map'){ui.maplabel=!ui.maplabel;applyUI();sfx('move')}
+  else if(a==='save-view')saveViewModal();
+  else if(a==='view-save'){
+    const n=($('#viewName').value.trim())||('Вид '+(views.length+1));
+    views.push({id:'v'+Date.now(),name:n,mode:route==='all'?'all':routeMode,query,sort:sortMode,active:fltActive,fav:fltFav});
+    store.set('wt_views',views);renderViews();closeModal();toast('Вид сохранён','success',n);
+  }
+  else if(a==='view-apply'){const v=views.find(x=>x.id===t.dataset.id);if(v)applyView(v)}
+  else if(a==='view-del'){
+    const id=t.dataset.id,idx=views.findIndex(x=>x.id===id);if(idx<0)return;
+    const removed=views.splice(idx,1)[0];store.set('wt_views',views);renderViews();
+    toast('Вид удалён','info',removed.name,{label:'Вернуть',fn:()=>{views.splice(Math.min(idx,views.length),0,removed);store.set('wt_views',views);renderViews()}});
+  }
+  else if(a==='reset-filters'){fltActive=false;fltFav=false;query='';$('#srvSearch').value='';$('#fltActive').classList.remove('on');$('#fltFav').classList.remove('on');renderServers({animate:false})}
+  else if(a==='guide'){$('#guide').classList.contains('open')?closeGuide():openGuide()}
+  else if(a==='guide-close')closeGuide();
+  else if(a==='accent'){accent=t.dataset.accent;applySettings();sfx('select')}
+  else if(a==='tg-sound'){soundOn=!soundOn;applySettings();if(soundOn)sfx('select');toast(soundOn?'Звук включён':'Звук выключен','info')}
+  else if(a==='tg-motion'){motionOn=!motionOn;applySettings();toast(motionOn?'Анимации включены':'Анимации выключены','info')}
+  else if(a==='reset'){
+    ['wt_fav_order','wt_profile','wt_last','wt_accent','wt_sound','wt_motion','wt_views','wt_ui'].forEach(k=>store.del(k));
+    authPendingClear();authStarted(null);
+    favs=new Set();favOrder=[];views=[];profile=null;last=null;accent='blue';soundOn=true;motionOn=true;
+    ui={density:'cozy',cols:'auto',ping:true,maplabel:true};applySettings();renderViews();buildActs();
+    if(route==='servers'||route==='all')renderServers({animate:false});
+    toast('Настройки сброшены','warn');
+  }
+  else if(a==='chat-open'){closeGuide();openChat()}
+  else if(a==='chat-close')closeChat();
+  else if(a==='chat-send')sendChat($('#chatInput').value);
+  else if(a==='chat-chip')sendChat(t.dataset.q);
+  else if(a==='info'){e.preventDefault();closeGuide();infoDialog(t.dataset.doc)}
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='srvSearch'){query=e.target.value;renderServers({keepFocus:true,animate:false})}
+  if(e.target.id==='globalSearch')renderSearch(e.target.value);
+  if(e.target.id==='banSearch')renderBans(e.target.value);
+  if(e.target.id==='mapSearch'){mapQuery=e.target.value;buildMaps(true)}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='srvSort'){sortMode=e.target.value;renderServers({keepFocus:true,animate:false})}
+  if(e.target.id==='srvCols'){ui.cols=e.target.value;applyUI()}
+  if(e.target.id==='mapSort'){mapSort=e.target.value;buildMaps(false)}
+});
+$('#modalOver').addEventListener('click',e=>{if(e.target.id==='modalOver')closeModal()});
+$('#searchOver').addEventListener('click',e=>{if(e.target.id==='searchOver')closeSearch()});
+$('#lightbox').addEventListener('click',e=>{if(e.target.id==='lightbox')closeLightbox()});
+
+/* favorites drag reorder */
+document.addEventListener('dragstart',e=>{
+  const c=e.target.closest&&e.target.closest('.srv[draggable]');if(!c)return;
+  dragSid=c.dataset.sid;c.classList.add('dragging');
+  e.dataTransfer.effectAllowed='move';try{e.dataTransfer.setData('text/plain',dragSid)}catch(err){}
+});
+document.addEventListener('dragover',e=>{
+  const c=e.target.closest&&e.target.closest('.srv[draggable]');if(!c||!dragSid||c.dataset.sid===dragSid)return;
+  e.preventDefault();e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.srv.drop-over').forEach(x=>x.classList.remove('drop-over'));
+  c.classList.add('drop-over');
+});
+document.addEventListener('drop',e=>{
+  const c=e.target.closest&&e.target.closest('.srv[draggable]');if(!c||!dragSid)return;
+  e.preventDefault();
+  const target=c.dataset.sid;
+  if(target!==dragSid){
+    const from=favOrder.indexOf(dragSid),to=favOrder.indexOf(target);
+    if(from>-1&&to>-1){favOrder.splice(from,1);favOrder.splice(to,0,dragSid);favs=new Set(favOrder);store.set('wt_fav_order',favOrder);renderServers({keepFocus:true,animate:false});buildActs();toast('Порядок обновлён','info')}
+  }
+  dragSid=null;
+});
+document.addEventListener('dragend',()=>{dragSid=null;document.querySelectorAll('.srv.dragging,.srv.drop-over').forEach(x=>x.classList.remove('dragging','drop-over'))});
+
+/* keyboard */
+document.addEventListener('keydown',e=>{
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if(e.key==='Escape'){
+    flashHint('esc');
+    if($('#lightbox').classList.contains('open'))closeLightbox();
+    else if($('#searchOver').classList.contains('open'))closeSearch();
+    else if($('#modalOver').classList.contains('open'))closeModal();
+    else if($('#chatPanel').classList.contains('open'))closeChat();
+    else if($('#guide').classList.contains('open'))closeGuide();
+    else if(route!=='home'){sfx('back');navigate('')}
+    return;
+  }
+  if($('#lightbox').classList.contains('open')){
+    if(e.key==='ArrowLeft'){e.preventDefault();lbMove(-1);return}
+    if(e.key==='ArrowRight'){e.preventDefault();lbMove(1);return}
+    if(e.key==='Enter'){const f=$('#lightbox .focused');if(f){e.preventDefault();flashHint('enter');f.click()}return}
+  }
+  if($('#searchOver').classList.contains('open')){
+    if(e.key==='ArrowDown'){e.preventDefault();searchMove(1);return}
+    if(e.key==='ArrowUp'){e.preventDefault();searchMove(-1);return}
+    if(e.key==='Enter'){const f=$('#searchResults .sres.focused');if(f){e.preventDefault();flashHint('enter');f.click()}return}
+  }
+  if(typing){
+    if(e.key==='Enter'&&document.activeElement.id==='chatInput')sendChat($('#chatInput').value);
+    if(e.key==='Enter'&&document.activeElement.id==='viewName'){e.preventDefault();const b=document.querySelector('[data-action="view-save"]');if(b)b.click()}
+    return;
+  }
+  if(e.key==='/'||(e.ctrlKey&&e.key.toLowerCase()==='k')){e.preventDefault();flashHint('slash');openSearch();return}
+  if(e.key.toLowerCase()==='g'){flashHint('g');openGuide();return}
+  const map={ArrowLeft:[-1,0],ArrowRight:[1,0],ArrowUp:[0,-1],ArrowDown:[0,1]};
+  if(map[e.key]){e.preventDefault();moveFocus(...map[e.key])}
+  else if(e.key==='Enter'){e.preventDefault();activate()}
+});
+
+/* gamepad */
+let padPrev={},padRepeat=0;
+window.addEventListener('gamepadconnected',e=>{toast('Геймпад подключён','success',e.gamepad.id.slice(0,34));$('#padStatus').innerHTML=ic('pad')+'геймпад активен';polish($('#padStatus'))});
+window.addEventListener('gamepaddisconnected',()=>{$('#padStatus').innerHTML=''});
+function pollPad(t){
+  let gp=null;try{gp=navigator.getGamepads?navigator.getGamepads()[0]:null}catch(err){}
+  if(gp){
+    const ax=gp.axes[0]||0,ay=gp.axes[1]||0;
+    const dir=Math.abs(ax)>.5?[Math.sign(ax),0]:Math.abs(ay)>.5?[0,Math.sign(ay)]:gp.buttons[14]&&gp.buttons[14].pressed?[-1,0]:gp.buttons[15]&&gp.buttons[15].pressed?[1,0]:gp.buttons[12]&&gp.buttons[12].pressed?[0,-1]:gp.buttons[13]&&gp.buttons[13].pressed?[0,1]:null;
+    if(dir){if(t-padRepeat>200){moveFocus(...dir);padRepeat=t}}else padRepeat=0;
+    const press=(i,fn)=>{const p=gp.buttons[i]&&gp.buttons[i].pressed;if(p&&!padPrev[i])fn();padPrev[i]=p};
+    press(0,activate);
+    press(1,()=>{flashHint('esc');if($('#lightbox').classList.contains('open'))closeLightbox();else if($('#modalOver').classList.contains('open'))closeModal();else if($('#searchOver').classList.contains('open'))closeSearch();else if($('#guide').classList.contains('open'))closeGuide();else if(route!=='home'){sfx('back');navigate('')}});
+    press(2,()=>{flashHint('slash');openSearch()});press(3,()=>{flashHint('g');openGuide()});press(9,openGuide);press(16,()=>navigate(''));
+  }
+  requestAnimationFrame(pollPad);
+}
+requestAnimationFrame(pollPad);
+
+/* dust */
+(function(){
+  const cv=$('#dust'),ctx=cv.getContext('2d');let W,H,parts=[],cleared=false;
+  const DPR=Math.min(devicePixelRatio||1,1.5);
+  function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cv.style.width=W+'px';cv.style.height=H+'px';ctx.setTransform(DPR,0,0,DPR,0,0);cleared=false}
+  size();
+  for(let i=0;i<32;i++)parts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.6+.4,s:Math.random()*.3+.06,o:Math.random()*.3+.08,ph:Math.random()*6.28});
+  function loop(t){
+    if(motionOn&&!document.body.classList.contains('no-motion')){
+      cleared=false;ctx.clearRect(0,0,W,H);
+      parts.forEach(p=>{p.y-=p.s;p.x+=Math.sin(t/2600+p.ph)*.15;if(p.y<-5){p.y=H+5;p.x=Math.random()*W}
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,6.28);ctx.fillStyle='rgba(180,200,255,'+(p.o*(.6+.4*Math.sin(t/900+p.ph)))+')';ctx.fill()});
+    }else if(!cleared){ctx.clearRect(0,0,W,H);cleared=true}
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+  window.addEventListener('resize',size);
+})();
+
+/* ==================== INIT ==================== */
+applyBrand();
+renderGuide();
+handleSteamReturn();
+$('#hbBrand').textContent='wontake · © 2026 · '+NS+' servers';
+$('#shopSub').textContent='Привилегии действуют на всех '+NS+' серверах сети';
+buildNav();buildTiles();buildSvTabs();buildActs();applySettings();renderViews();
+refreshLive([]);countUp($('#chipOnline'),grandTotal(),1200);
+applyRoute();polish();
+
+resolveAsset('icon').then(u=>{if(u){ICON_URL=u;applyBrand();renderGuide()}});
+Promise.all(['dexer','primer','viper'].map(k=>resolveAsset(k).then(u=>{DONATE_IMG[k]=u}))).then(()=>{
+  rendered.shop=false;
+  if(route==='shop')renderSection('shop');
+  if(ambientKey==='shop')setAmbient('shop');
+  buildActs();
+});
+MAPS_LIST.forEach(m=>{
+  resolveAsset(MAP_ALIAS[m]||m).then(u=>{
+    MAP_IMG[m]=u;
+    patchMap(m);
+  });
+});
+setTimeout(()=>{const b=$('#boot');if(b)b.remove()},2600);
+</script>
+</body>
+</html>
